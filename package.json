@@ -1,0 +1,49 @@
+{
+  "name": "flarelette-demo",
+  "version": "1.0.0",
+  "description": "Production-ready Cloudflare Workers microservices template built with Flarelette",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "archlette": "npx archlette all -f docs/archlette.config.yaml",
+    "dev": "node scripts/dev.js",
+    "dev:workers": "tsx scripts/miniflare.ts",
+    "dev:ui": "cd ui && pnpm dev",
+    "build": "pnpm -r build",
+    "deploy": "pnpm -r deploy",
+    "setup": "node scripts/setup.js",
+    "setup:d1": "bash scripts/setup-d1.sh",
+    "generate:keys": "node scripts/generate-keys.js",
+    "test:token": "node scripts/test-token.js",
+    "type-check": "pnpm -r type-check",
+    "lint": "pnpm -r lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\"",
+    "check": "npm run lint && npm run format && npm run type-check"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "microservices",
+    "jwt",
+    "auth",
+    "template",
+    "flarelette",
+    "hono"
+  ],
+  "author": "Chris Lyons",
+  "license": "MIT",
+  "devDependencies": {
+    "@chrislyons-dev/archlette": "^1.2.0",
+    "eslint": "^9.39.0",
+    "miniflare": "^3.20231030.4",
+    "prettier": "^3.1.0",
+    "tsx": "^4.7.0",
+    "wrangler": "^3.22.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "dependencies": {}
+}

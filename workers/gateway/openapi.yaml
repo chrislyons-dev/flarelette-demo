@@ -1,0 +1,279 @@
+openapi: 3.1.0
+info:
+  title: Flarelette Gateway API
+  version: 1.0.0
+  description: |
+    Gateway for Flarelette microservices architecture.
+
+    All endpoints perform input validation with Zod (zero trust).
+    Internal JWTs are minted using EdDSA (Ed25519) and include short TTL.
+
+    **Authentication Flow:**
+    1. Anonymous requests receive internal JWT with `sub: "anon:*"` and `roles: ["anonymous"]`
+    2. Authenticated requests (Auth0) are exchanged for internal JWT via RFC 8693 semantics
+    3. All microservices verify internal JWTs via JWKS
+  contact:
+    name: Chris Lyons
+    url: https://github.com/chrislyons-dev/flarelette-demo
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8787
+    description: Local development
+  - url: https://yourdomain.com
+    description: Production (configure in wrangler.toml)
+
+tags:
+  - name: Health
+    description: Service health and metadata
+  - name: Content
+    description: CMS operations (news, events)
+  - name: Images
+    description: Image and gallery management
+  - name: Forms
+    description: Form submission handling
+
+paths:
+  /api/health:
+    get:
+      summary: Health check
+      description: Returns service health and metadata
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  service:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+                  version:
+                    type: string
+
+  /.well-known/jwks.json:
+    get:
+      summary: JSON Web Key Set
+      description: Public keys for verifying internal JWTs (accessed via Service Binding)
+      tags: [Health]
+      responses:
+        '200':
+          description: JWKS
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  keys:
+                    type: array
+                    items:
+                      type: object
+
+  /api/content/events:
+    get:
+      summary: List events
+      description: Retrieve upcoming events (public endpoint)
+      tags: [Content]
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+                  total:
+                    type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/content/news:
+    get:
+      summary: List news articles
+      description: Retrieve published news (public endpoint)
+      tags: [Content]
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: List of news articles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  articles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NewsArticle'
+                  total:
+                    type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/forms/contact:
+    post:
+      summary: Submit contact form
+      description: Submit a contact form (public endpoint with rate limiting)
+      tags: [Forms]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, message]
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                email:
+                  type: string
+                  format: email
+                  maxLength: 255
+                phone:
+                  type: string
+                  maxLength: 20
+                message:
+                  type: string
+                  minLength: 10
+                  maxLength: 5000
+      responses:
+        '201':
+          description: Form submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  id:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+components:
+  schemas:
+    Event:
+      type: object
+      required: [id, title, date]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        date:
+          type: string
+          format: date-time
+        location:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: integer
+
+    NewsArticle:
+      type: object
+      required: [id, title, slug]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        slug:
+          type: string
+        content:
+          type: string
+        published_at:
+          type: integer
+        created_at:
+          type: integer
+
+  responses:
+    BadRequest:
+      description: Invalid request (validation failed)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+    RateLimited:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              retry_after:
+                type: integer

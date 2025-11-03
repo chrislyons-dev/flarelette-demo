@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import type { Event } from '../types'
+
+const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL
+let events: Event[] = []
+let error: string | null = null
+
+try {
+  const response = await fetch(`${apiBaseUrl}/api/content/events?limit=20`)
+  if (response.ok) {
+    const data = await response.json()
+    events = data.events || []
+  } else {
+    error = 'Failed to load events'
+  }
+} catch (e) {
+  error = 'Could not connect to API. Make sure the gateway is running.'
+}
+
+function formatDate(dateString: string) {
+  const date = new Date(dateString)
+  return date.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
+---
+
+<BaseLayout title="Events" description="Upcoming events and performances">
+  <div class="bg-primary-600 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-4xl font-bold">Upcoming Events</h1>
+      <p class="mt-2 text-primary-100">Performances, games, and competitions</p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    {error ? (
+      <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+        {error}
+      </div>
+    ) : events.length === 0 ? (
+      <div class="bg-gray-50 rounded-lg p-8 text-center text-gray-500">
+        No upcoming events at this time.
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {events.map((event) => (
+          <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+            <div class="flex items-start justify-between">
+              <div class="flex-1">
+                <h2 class="text-xl font-bold text-gray-900 mb-2">{event.title}</h2>
+                <div class="text-sm text-gray-600 space-y-1">
+                  <p>
+                    <strong>Date:</strong> {formatDate(event.date)}
+                  </p>
+                  {event.location && (
+                    <p>
+                      <strong>Location:</strong> {event.location}
+                    </p>
+                  )}
+                </div>
+                {event.description && (
+                  <p class="mt-3 text-gray-700">{event.description}</p>
+                )}
+                {event.category && (
+                  <span class="inline-block mt-3 px-3 py-1 bg-primary-100 text-primary-700 text-xs font-semibold rounded-full">
+                    {event.category}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</BaseLayout>

@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import type { NewsArticle } from '../types'
+
+const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL
+let articles: NewsArticle[] = []
+let error: string | null = null
+
+try {
+  const response = await fetch(`${apiBaseUrl}/api/content/news?limit=20`)
+  if (response.ok) {
+    const data = await response.json()
+    articles = data.articles || []
+  } else {
+    error = 'Failed to load news'
+  }
+} catch (e) {
+  error = 'Could not connect to API. Make sure the gateway is running.'
+}
+
+function formatDate(timestamp: number) {
+  const date = new Date(timestamp * 1000)
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
+---
+
+<BaseLayout title="News" description="Latest news and announcements">
+  <div class="bg-primary-600 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-4xl font-bold">News & Announcements</h1>
+      <p class="mt-2 text-primary-100">Stay updated with the latest news</p>
+    </div>
+  </div>
+
+  <div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    {error ? (
+      <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+        {error}
+      </div>
+    ) : articles.length === 0 ? (
+      <div class="bg-gray-50 rounded-lg p-8 text-center text-gray-500">
+        No news articles available.
+      </div>
+    ) : (
+      <div class="space-y-8">
+        {articles.map((article) => (
+          <article class="bg-white rounded-lg shadow-sm p-8 hover:shadow-md transition-shadow">
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">
+              {article.title}
+            </h2>
+            <p class="text-sm text-gray-500 mb-4">
+              {article.published_at ? formatDate(article.published_at) : 'Draft'}
+              {article.author && ` • by ${article.author}`}
+            </p>
+            {article.excerpt && (
+              <p class="text-gray-600 mb-4 italic">{article.excerpt}</p>
+            )}
+            {article.content && (
+              <div class="prose prose-primary max-w-none text-gray-700 whitespace-pre-line">
+                {article.content}
+              </div>
+            )}
+          </article>
+        ))}
+      </div>
+    )}
+  </div>
+</BaseLayout>

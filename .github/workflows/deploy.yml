@@ -1,0 +1,128 @@
+name: Deploy Flarelette Demo
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm type-check
+
+      - name: Generate Ed25519 keypair (ephemeral)
+        id: keys
+        run: |
+          node -e "
+          const { generateKeyPairSync } = require('crypto');
+          const kid = 'v' + Date.now();
+
+          const { privateKey, publicKey } = generateKeyPairSync('ed25519', {
+            privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+            publicKeyEncoding: { type: 'spki', format: 'der' }
+          });
+
+          // Extract raw x coordinate (last 32 bytes of SPKI DER)
+          const x = Buffer.from(publicKey.slice(-32)).toString('base64url');
+
+          const jwks = JSON.stringify({
+            keys: [{
+              kty: 'OKP',
+              crv: 'Ed25519',
+              alg: 'EdDSA',
+              use: 'sig',
+              kid: kid,
+              x: x
+            }]
+          });
+
+          // Output to GitHub Actions
+          const fs = require('fs');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, \`PRIVATE_PEM<<EOF\n\${privateKey}\nEOF\n\`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, \`JWKS<<EOF\n\${jwks}\nEOF\n\`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, \`KID=\${kid}\n\`);
+          "
+
+      - name: Deploy microservices
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          # Deploy content-service first (no secrets needed)
+          cd workers/content-service
+          pnpm wrangler deploy
+          cd ../..
+
+          # Deploy image-service
+          cd workers/image-service
+          pnpm wrangler deploy
+          cd ../..
+
+          # Deploy forms-service
+          cd workers/forms-service
+          pnpm wrangler deploy
+          cd ../..
+
+          # Deploy gateway with secrets
+          cd workers/gateway
+          echo "${{ steps.keys.outputs.PRIVATE_PEM }}" | pnpm wrangler secret put ED25519_PRIVATE_PEM
+          echo "${{ steps.keys.outputs.JWKS }}" > jwks.json
+          pnpm wrangler deploy --var JWKS_KID="${{ steps.keys.outputs.KID }}"
+          cd ../..
+
+      - name: Build Astro frontend
+        run: |
+          cd ui
+          pnpm build
+          cd ..
+
+      - name: Deploy to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          cd ui
+          pnpm wrangler pages deploy ./dist --project-name=flarelette-demo
+          cd ..
+
+      - name: Configure API Shield
+        if: vars.CLOUDFLARE_ZONE_ID != ''
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
+        run: |
+          node scripts/configure-api-shield.js
+
+      - name: Verify deployment
+        run: |
+          # Wait for deployment to propagate
+          sleep 10
+
+          # Test gateway health (update URL when deployed)
+          # curl -sSf "https://yourdomain.com/api/health" || echo "Gateway not yet available"
+
+          echo "✅ Deployment complete!"
+          echo "Configure your custom domain in wrangler.toml and Cloudflare dashboard"

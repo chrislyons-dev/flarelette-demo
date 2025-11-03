@@ -1,0 +1,152 @@
+system:
+  name: archlette-demo
+  description: Archlette demo application
+  repository: https://github.com/chrislyons-dev/archlette-demo.git
+
+project:
+  name: archlette-demo
+  description: Archlette demo application
+
+paths:
+  output: ./architecture
+  logs: ./architecture/logs
+  ir_out: ./architecture/flarelette-hono-ir.json
+  dsl_out: ./architecture/flarelette-hono.dsl
+  render_out: ./architecture/diagrams
+  docs_out: ./architecture
+
+extractors:
+  # Wrangler deployment extractor for Cloudflare Workers
+  - use: extractors/builtin/basic-wrangler
+    inputs:
+      include:
+        - './workers/content-service/wrangler.toml'
+        - './workers/forms-service/wrangler.toml'
+        - './workers/gateway/wrangler.toml'
+        - './workers/image-service/wrangler.toml'
+  - use: extractors/builtin/basic-astro
+    inputs:
+      include:
+        - './ui/**/*.astro'
+      exclude:
+        - '**/*.test.astro'
+        - '**/.astro/**'
+        - '**/dist/**'
+        - '**/build/**'
+        - '**/node_modules/**'
+        - '**/*.test.*'
+        - '**/*.spec.*'
+        - '**/test/**'
+        - '**/tests/**'
+        - '**/vitest.config.ts'
+  - use: extractors/builtin/basic-node
+    inputs:
+      include:
+        - './ui/**/*.js'
+        - './ui/**/*.cjs'
+        - './ui/**/*.mjs'
+        - './ui/**/*.jsx'
+        - './ui/**/*.ts'
+        - './ui/**/*.tsx'
+      exclude:
+        - '**/node_modules/**'
+        - '**/dist/**'
+        - '**/build/**'
+        - '**/*.test.*'
+        - '**/*.spec.*'
+        - '**/test/**'
+        - '**/tests/**'
+        - '**/vitest.config.ts'
+  - use: extractors/builtin/basic-node
+    inputs:
+      include:
+        - './workers/content-service/**/*.js'
+        - './workers/content-serviceui/**/*.cjs'
+        - './workers/content-service/**/*.mjs'
+        - './workers/content-service/**/*.jsx'
+        - './workers/content-service/**/*.ts'
+        - './workers/content-service/**/*.tsx'
+      exclude:
+        - '**/node_modules/**'
+        - '**/dist/**'
+        - '**/build/**'
+        - '**/*.test.*'
+        - '**/*.spec.*'
+        - '**/test/**'
+        - '**/tests/**'
+        - '**/vitest.config.ts'
+  - use: extractors/builtin/basic-node
+    inputs:
+      include:
+        - './workers/forms-service/**/*.js'
+        - './workers/forms-service/**/*.cjs'
+        - './workers/forms-service/**/*.mjs'
+        - './workers/forms-service/**/*.jsx'
+        - './workers/forms-service/**/*.ts'
+        - './workers/forms-service/**/*.tsx'
+      exclude:
+        - '**/node_modules/**'
+        - '**/dist/**'
+        - '**/build/**'
+        - '**/*.test.*'
+        - '**/*.spec.*'
+        - '**/test/**'
+        - '**/tests/**'
+        - '**/vitest.config.ts'
+  - use: extractors/builtin/basic-node
+    inputs:
+      include:
+        - './workers/gateway/**/*.js'
+        - './workers/gateway/**/*.cjs'
+        - './workers/gateway/**/*.mjs'
+        - './workers/gateway/**/*.jsx'
+        - './workers/gateway/**/*.ts'
+        - './workers/gateway/**/*.tsx'
+      exclude:
+        - '**/node_modules/**'
+        - '**/dist/**'
+        - '**/build/**'
+        - '**/*.test.*'
+        - '**/*.spec.*'
+        - '**/test/**'
+        - '**/tests/**'
+        - '**/vitest.config.ts'
+  - use: extractors/builtin/basic-node
+    inputs:
+      include:
+        - './workers/image-service/**/*.js'
+        - './workers/image-service/**/*.cjs'
+        - './workers/image-service/**/*.mjs'
+        - './workers/image-service/**/*.jsx'
+        - './workers/image-service/**/*.ts'
+        - './workers/image-service/**/*.tsx'
+      exclude:
+        - '**/node_modules/**'
+        - '**/dist/**'
+        - '**/build/**'
+        - '**/*.test.*'
+        - '**/*.spec.*'
+        - '**/test/**'
+        - '**/tests/**'
+        - '**/vitest.config.ts'
+
+
+# ir json in, ir json out (or errors)
+validators:
+  - use: validators/builtin/base-validator
+
+# ir json in, dsl out
+generators:
+  - use: generators/builtin/structurizr
+
+# dsl in, images out
+# Renderers run sequentially - order matters!
+# 1. Export DSL to PlantUML/Mermaid
+# 2. Render PlantUML to PNG images
+renderers:
+  - use: renderers/builtin/structurizr-export
+  - use: renderers/builtin/plantuml-render
+
+# dsl & images in, (likely markdown) docs out
+docs:
+  - use: docs/builtin/markdown-docs

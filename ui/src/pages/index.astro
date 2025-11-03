@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout title="Welcome to Flarelette Demo">
+  <div class="bg-primary-600 text-white">
+    <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+      <h1 class="text-4xl font-bold mb-4">
+        Flarelette Microservices Demo
+      </h1>
+      <p class="text-xl text-primary-100 max-w-3xl">
+        Production-ready template for building Cloudflare Workers applications with JWT authentication,
+        D1 databases, R2 storage, and Astro frontend — all on the free tier.
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+      <div class="bg-white p-6 rounded-lg shadow-sm">
+        <h2 class="text-2xl font-bold mb-3 text-gray-900">Zero Trust Security</h2>
+        <p class="text-gray-600">
+          All API requests authenticated with EdDSA-signed internal JWTs. Gateway mints short-lived tokens
+          for every request, verified by each microservice.
+        </p>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow-sm">
+        <h2 class="text-2xl font-bold mb-3 text-gray-900">Free Tier Friendly</h2>
+        <p class="text-gray-600">
+          Built to run entirely on Cloudflare's generous free tier: Workers, Pages, D1, and R2.
+          Perfect for school sites, small businesses, and side projects.
+        </p>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow-sm">
+        <h2 class="text-2xl font-bold mb-3 text-gray-900">Production Ready</h2>
+        <p class="text-gray-600">
+          Input validation with Zod, OpenAPI specs, structured logging, and GitHub Actions deployment.
+          Clone and customize for your next project.
+        </p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm p-8">
+      <h2 class="text-3xl font-bold mb-6 text-gray-900">Features</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-lg font-semibold mb-2 text-primary-600">Gateway</h3>
+          <ul class="list-disc list-inside text-gray-600 space-y-1">
+            <li>EdDSA JWT signing with JWKS</li>
+            <li>Input validation with Zod</li>
+            <li>OpenAPI 3.1 specification</li>
+            <li>Service bindings to microservices</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold mb-2 text-primary-600">Content Service</h3>
+          <ul class="list-disc list-inside text-gray-600 space-y-1">
+            <li>D1-backed CMS (SQLite)</li>
+            <li>News, events, roster, pages</li>
+            <li>Sample data included</li>
+            <li>JWT auth on every endpoint</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold mb-2 text-primary-600">Image Service</h3>
+          <ul class="list-disc list-inside text-gray-600 space-y-1">
+            <li>R2 storage integration</li>
+            <li>Photo galleries</li>
+            <li>CDN-optimized delivery</li>
+            <li>Admin upload (Auth0 ready)</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold mb-2 text-primary-600">Forms Service</h3>
+          <ul class="list-disc list-inside text-gray-600 space-y-1">
+            <li>Contact form submissions</li>
+            <li>D1 storage with metadata</li>
+            <li>Rate limiting ready</li>
+            <li>Admin view (Auth0 ready)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-12 bg-primary-50 rounded-lg p-8 border border-primary-200">
+      <h2 class="text-2xl font-bold mb-4 text-gray-900">Getting Started</h2>
+      <div class="prose prose-primary max-w-none">
+        <ol class="text-gray-700 space-y-2">
+          <li>Clone this repository</li>
+          <li>Run <code class="bg-white px-2 py-1 rounded text-sm">pnpm install</code></li>
+          <li>Run <code class="bg-white px-2 py-1 rounded text-sm">pnpm run setup</code> to initialize databases</li>
+          <li>Run <code class="bg-white px-2 py-1 rounded text-sm">pnpm dev</code> to start all services</li>
+          <li>Visit <a href="/events" class="text-primary-600 hover:text-primary-700">Events</a>, <a href="/news" class="text-primary-600 hover:text-primary-700">News</a>, and <a href="/contact" class="text-primary-600 hover:text-primary-700">Contact</a> to see it in action</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  code {
+    font-family: 'Courier New', monospace;
+  }
+</style>

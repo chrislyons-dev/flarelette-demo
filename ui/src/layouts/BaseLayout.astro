@@ -1,0 +1,62 @@
+---
+interface Props {
+  title: string
+  description?: string
+}
+
+const { title, description = 'Flarelette microservices demo' } = Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen bg-gray-50">
+    <nav class="bg-white shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex">
+            <a href="/" class="flex items-center text-xl font-bold text-primary-600">
+              Flarelette Demo
+            </a>
+            <div class="ml-10 flex items-center space-x-4">
+              <a href="/" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium">
+                Home
+              </a>
+              <a href="/events" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium">
+                Events
+              </a>
+              <a href="/news" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium">
+                News
+              </a>
+              <a href="/roster" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium">
+                Roster
+              </a>
+              <a href="/contact" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium">
+                Contact
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="bg-white mt-16 border-t border-gray-200">
+      <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <p class="text-center text-gray-500 text-sm">
+          Built with <a href="https://github.com/chrislyons-dev/flarelette-hono" class="text-primary-600 hover:text-primary-700">flarelette-hono</a> &middot;
+          Running on Cloudflare Workers free tier
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

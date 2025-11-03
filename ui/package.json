@@ -1,0 +1,30 @@
+{
+  "name": "@flarelette-demo/ui",
+  "version": "1.0.0",
+  "description": "Astro frontend for Flarelette demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "deploy": "wrangler pages deploy ./dist",
+    "type-check": "astro check",
+    "lint": "eslint src --ext .ts,.astro"
+  },
+  "dependencies": {
+    "astro": "^4.0.0",
+    "@astrojs/tailwind": "^5.0.0",
+    "tailwindcss": "^3.4.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.3.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-astro": "^0.31.0",
+    "astro-eslint-parser": "^0.16.0",
+    "typescript": "^5.3.0",
+    "wrangler": "^3.0.0"
+  }
+}

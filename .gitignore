@@ -137,3 +137,25 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+CLAUDE.md
+.claude/
+
+# Notes directory (keep for reference, but ignore local edits)
+notes/*.local.md
+
+# Cloudflare Workers specific
+.wrangler/
+.dev.vars
+wrangler.toml.backup
+
+# JWKS (generated locally, injected in production)
+workers/gateway/jwks.json
+
+# Astro
+.astro/
+
+# Database files (local D1)
+*.sqlite
+*.db
+.mf/

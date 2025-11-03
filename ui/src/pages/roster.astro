@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import type { RosterMember } from '../types'
+
+const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL
+let members: RosterMember[] = []
+let error: string | null = null
+
+try {
+  const response = await fetch(`${apiBaseUrl}/api/content/roster`)
+  if (response.ok) {
+    const data = await response.json()
+    members = data.members || []
+  } else {
+    error = 'Failed to load roster'
+  }
+} catch (e) {
+  error = 'Could not connect to API. Make sure the gateway is running.'
+}
+---
+
+<BaseLayout title="Roster" description="Meet our team members">
+  <div class="bg-primary-600 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-4xl font-bold">Our Team</h1>
+      <p class="mt-2 text-primary-100">Meet our talented performers and athletes</p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    {error ? (
+      <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+        {error}
+      </div>
+    ) : members.length === 0 ? (
+      <div class="bg-gray-50 rounded-lg p-8 text-center text-gray-500">
+        No roster members found.
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {members.map((member) => (
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            {member.photo_url ? (
+              <div class="aspect-square bg-gray-200">
+                <img
+                  src={member.photo_url}
+                  alt={member.name}
+                  class="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <div class="aspect-square bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
+                <span class="text-6xl font-bold text-primary-600">
+                  {member.name.charAt(0)}
+                </span>
+              </div>
+            )}
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-1">{member.name}</h3>
+              <div class="flex items-center gap-2 text-sm text-gray-600 mb-3">
+                {member.role && (
+                  <span class="px-2 py-1 bg-primary-100 text-primary-700 rounded-full font-semibold">
+                    {member.role}
+                  </span>
+                )}
+                {member.grade && (
+                  <span class="text-gray-500">Grade {member.grade}</span>
+                )}
+              </div>
+              {member.bio && (
+                <p class="text-gray-700 text-sm">{member.bio}</p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</BaseLayout>

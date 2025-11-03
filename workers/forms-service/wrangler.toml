@@ -1,0 +1,22 @@
+name = "flarelette-forms-service"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+workers_dev = false
+
+# Service binding to gateway (for JWKS)
+[[services]]
+binding = "GATEWAY"
+service = "flarelette-gateway"
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "forms-db"
+database_id = "placeholder-will-be-created"
+
+# Environment variables
+[vars]
+JWT_ISS = "https://gateway.internal"
+JWT_AUD = "flarelette.mesh"
+JWKS_PATH = "/.well-known/jwks.json"
+JWKS_TTL_SECONDS = "600"
