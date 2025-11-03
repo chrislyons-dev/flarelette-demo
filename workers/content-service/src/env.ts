@@ -1,5 +1,7 @@
 /**
  * Environment bindings for Content Service
+ *
+ * @module env
  */
 export interface Env {
   // Service binding to gateway (for JWKS)

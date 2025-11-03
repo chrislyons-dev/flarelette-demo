@@ -1,5 +1,5 @@
 {
-  "name": "@flarelette-demo/forms-service",
+  "name": "forms-service",
   "version": "1.0.0",
   "description": "Form submission service (contact, tryouts, etc.)",
   "private": true,

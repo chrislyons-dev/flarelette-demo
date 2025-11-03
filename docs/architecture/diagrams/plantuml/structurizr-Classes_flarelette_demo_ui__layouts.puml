@@ -1,0 +1,44 @@
+@startuml
+set separator none
+title archlette-demo - flarelette-demo-ui - Components
+
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
+  defaultFontName "Arial"
+}
+
+hide stereotype
+
+skinparam rectangle<<archlettedemo.flarelettedemoui.layoutsBaseLayout>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.flarelettedemoui.layoutsProps>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.flarelettedemoui>> {
+  BorderColor #ac5b15
+  FontColor #ac5b15
+  shadowing false
+}
+
+rectangle "flarelette-demo-ui\n<size:10>[Container: Cloudflare Worker]</size>" <<archlettedemo.flarelettedemoui>> {
+  rectangle "==layouts.BaseLayout\n<size:10>[Component: function]</size>\n\nServer-side render function for BaseLayout. Generates HTML output from Astro component template and props." <<archlettedemo.flarelettedemoui.layoutsBaseLayout>> as archlettedemo.flarelettedemoui.layoutsBaseLayout
+  rectangle "==layouts.Props\n<size:10>[Component: interface]</size>" <<archlettedemo.flarelettedemoui.layoutsProps>> as archlettedemo.flarelettedemoui.layoutsProps
+}
+
+@enduml

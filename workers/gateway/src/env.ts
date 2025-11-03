@@ -1,5 +1,7 @@
 /**
  * Environment bindings for Gateway Worker
+ *
+ * @module env
  */
 export interface Env {
   // Service bindings to microservices

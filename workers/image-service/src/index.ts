@@ -3,6 +3,8 @@
  *
  * Manages image uploads and galleries using R2 storage.
  * All endpoints require internal JWT verification.
+ *
+ * @module main
  */
 import { Hono } from 'hono'
 import { authGuard, policy, type JwtPayload } from '@chrislyons-dev/flarelette-hono'

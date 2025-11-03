@@ -1,0 +1,55 @@
+@startuml
+set separator none
+title archlette-demo - content-service - Components
+
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
+  defaultFontName "Arial"
+}
+
+hide stereotype
+
+skinparam rectangle<<Database>> {
+  BackgroundColor #999999
+  FontColor #ffffff
+  BorderColor #6b6b6b
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.contentservice.env>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.contentservice.main>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.contentservice>> {
+  BorderColor #ac5b15
+  FontColor #ac5b15
+  shadowing false
+}
+
+rectangle "==Database\n<size:10>[Software System]</size>\n\nUses D1 database for storage." <<Database>> as Database
+
+rectangle "content-service\n<size:10>[Container: Cloudflare Worker]</size>" <<archlettedemo.contentservice>> {
+  rectangle "==env\n<size:10>[Component: module]</size>\n\nEnvironment bindings for Content Service" <<archlettedemo.contentservice.env>> as archlettedemo.contentservice.env
+  rectangle "==main\n<size:10>[Component: module]</size>\n\nContent Service CMS microservice for news, events, roster, pages. All endpoints require internal JWT verification." <<archlettedemo.contentservice.main>> as archlettedemo.contentservice.main
+}
+
+archlettedemo.contentservice.main -[#707070,thickness=2]-> archlettedemo.contentservice.env : "<color:#707070>imports Env"
+archlettedemo.contentservice.main -[#707070,thickness=2]-> Database : "<color:#707070>Uses Database for external system integration"
+@enduml

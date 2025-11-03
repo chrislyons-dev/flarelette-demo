@@ -3,6 +3,9 @@
  *
  * CMS microservice for news, events, roster, pages.
  * All endpoints require internal JWT verification.
+ *
+ * @module main
+ * @actor Database {System} {out} Uses D1 database for storage.
  */
 import { Hono } from 'hono'
 import { authGuard, policy, type JwtPayload } from '@chrislyons-dev/flarelette-hono'

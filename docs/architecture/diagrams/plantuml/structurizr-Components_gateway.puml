@@ -1,0 +1,62 @@
+@startuml
+set separator none
+title archlette-demo - gateway - Components
+
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
+  defaultFontName "Arial"
+}
+
+hide stereotype
+
+skinparam rectangle<<archlettedemo.gateway.auth>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.gateway.env>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.gateway.main>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.gateway.validation>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.gateway>> {
+  BorderColor #ac5b15
+  FontColor #ac5b15
+  shadowing false
+}
+
+rectangle "gateway\n<size:10>[Container: Cloudflare Worker]</size>" <<archlettedemo.gateway>> {
+  rectangle "==auth\n<size:10>[Component: module]</size>\n\nAuthentication and token minting" <<archlettedemo.gateway.auth>> as archlettedemo.gateway.auth
+  rectangle "==env\n<size:10>[Component: module]</size>\n\nEnvironment bindings for Gateway Worker" <<archlettedemo.gateway.env>> as archlettedemo.gateway.env
+  rectangle "==main\n<size:10>[Component: module]</size>\n\nFlarelette Gateway Entry point for all API traffic. Routes requests to microservices with internal JWT authentication (EdDSA signed). All input is validated with Zod - zero trust!" <<archlettedemo.gateway.main>> as archlettedemo.gateway.main
+  rectangle "==validation\n<size:10>[Component: module]</size>\n\nInput validation schemas using Zod All input is validated - zero trust!" <<archlettedemo.gateway.validation>> as archlettedemo.gateway.validation
+}
+
+archlettedemo.gateway.main -[#707070,thickness=2]-> archlettedemo.gateway.env : "<color:#707070>imports Env"
+archlettedemo.gateway.main -[#707070,thickness=2]-> archlettedemo.gateway.auth : "<color:#707070>imports getOrMintInternalToken"
+@enduml

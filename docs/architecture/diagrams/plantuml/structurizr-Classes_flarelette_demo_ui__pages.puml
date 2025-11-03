@@ -1,0 +1,76 @@
+@startuml
+set separator none
+title archlette-demo - flarelette-demo-ui - Components
+
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
+  defaultFontName "Arial"
+}
+
+hide stereotype
+
+skinparam rectangle<<archlettedemo.flarelettedemoui.pagescontact>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.flarelettedemoui.pagesevents>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.flarelettedemoui.pagesformatDate>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.flarelettedemoui.pagesindex>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.flarelettedemoui.pagesnews>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.flarelettedemoui.pagesroster>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.flarelettedemoui>> {
+  BorderColor #ac5b15
+  FontColor #ac5b15
+  shadowing false
+}
+
+rectangle "flarelette-demo-ui\n<size:10>[Container: Cloudflare Worker]</size>" <<archlettedemo.flarelettedemoui>> {
+  rectangle "==pages.contact\n<size:10>[Component: function]</size>\n\nServer-side render function for contact. Generates HTML output from Astro component template and props." <<archlettedemo.flarelettedemoui.pagescontact>> as archlettedemo.flarelettedemoui.pagescontact
+  rectangle "==pages.formatDate\n<size:10>[Component: function]</size>" <<archlettedemo.flarelettedemoui.pagesformatDate>> as archlettedemo.flarelettedemoui.pagesformatDate
+  rectangle "==pages.events\n<size:10>[Component: function]</size>\n\nServer-side render function for events. Generates HTML output from Astro component template and props." <<archlettedemo.flarelettedemoui.pagesevents>> as archlettedemo.flarelettedemoui.pagesevents
+  rectangle "==pages.index\n<size:10>[Component: function]</size>\n\nServer-side render function for index. Generates HTML output from Astro component template and props." <<archlettedemo.flarelettedemoui.pagesindex>> as archlettedemo.flarelettedemoui.pagesindex
+  rectangle "==pages.news\n<size:10>[Component: function]</size>\n\nServer-side render function for news. Generates HTML output from Astro component template and props." <<archlettedemo.flarelettedemoui.pagesnews>> as archlettedemo.flarelettedemoui.pagesnews
+  rectangle "==pages.roster\n<size:10>[Component: function]</size>\n\nServer-side render function for roster. Generates HTML output from Astro component template and props." <<archlettedemo.flarelettedemoui.pagesroster>> as archlettedemo.flarelettedemoui.pagesroster
+}
+
+@enduml

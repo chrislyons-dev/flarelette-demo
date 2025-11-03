@@ -1,5 +1,5 @@
 {
-  "name": "@flarelette-demo/gateway",
+  "name": "gateway",
   "version": "1.0.0",
   "description": "Flarelette Gateway - EdDSA signing and routing",
   "private": true,

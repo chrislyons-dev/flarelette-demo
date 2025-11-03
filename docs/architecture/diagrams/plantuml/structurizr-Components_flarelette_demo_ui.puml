@@ -1,0 +1,70 @@
+@startuml
+set separator none
+title archlette-demo - flarelette-demo-ui - Components
+
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
+  defaultFontName "Arial"
+}
+
+hide stereotype
+
+skinparam person<<User>> {
+  BackgroundColor #08427b
+  FontColor #ffffff
+  BorderColor #052e56
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.flarelettedemoui.env>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.flarelettedemoui.layouts>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.flarelettedemoui.pages>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.flarelettedemoui.types>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.flarelettedemoui>> {
+  BorderColor #ac5b15
+  FontColor #ac5b15
+  shadowing false
+}
+
+person "==User\n<size:10>[Person]</size>\n\nEnd user who interacts with the Flarelette Demo UI" <<User>> as User
+
+rectangle "flarelette-demo-ui\n<size:10>[Container: Cloudflare Worker]</size>" <<archlettedemo.flarelettedemoui>> {
+  rectangle "==layouts\n<size:10>[Component: module]</size>\n\nComponent inferred from directory: layouts" <<archlettedemo.flarelettedemoui.layouts>> as archlettedemo.flarelettedemoui.layouts
+  rectangle "==pages\n<size:10>[Component: module]</size>\n\nHome Page - Landing page for Flarelette Demo application" <<archlettedemo.flarelettedemoui.pages>> as archlettedemo.flarelettedemoui.pages
+  rectangle "==env\n<size:10>[Component: module]</size>\n\nEnvironment variable type definitions for Astro project" <<archlettedemo.flarelettedemoui.env>> as archlettedemo.flarelettedemoui.env
+  rectangle "==types\n<size:10>[Component: module]</size>\n\nShared types for the" <<archlettedemo.flarelettedemoui.types>> as archlettedemo.flarelettedemoui.types
+}
+
+archlettedemo.flarelettedemoui.pages -[#707070,thickness=2]-> archlettedemo.flarelettedemoui.layouts : "<color:#707070>Uses BaseLayout component"
+User -[#707070,thickness=2]-> archlettedemo.flarelettedemoui.pages : "<color:#707070>Interacts with pages"
+@enduml

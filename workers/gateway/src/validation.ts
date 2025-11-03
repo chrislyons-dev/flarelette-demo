@@ -1,6 +1,8 @@
 /**
  * Input validation schemas using Zod
  * All input is validated - zero trust!
+ *
+ * @module validation
  */
 import { z } from 'zod'
 

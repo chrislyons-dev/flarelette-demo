@@ -1,0 +1,60 @@
+@startuml
+set separator none
+title archlette-demo - gateway - Components
+
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
+  defaultFontName "Arial"
+}
+
+hide stereotype
+
+skinparam rectangle<<archlettedemo.gateway.authgenerateAnonId>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.gateway.authgetOrMintInternalToken>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.gateway.authmintAnonymousToken>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.gateway.authmintAuthenticatedToken>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.gateway>> {
+  BorderColor #ac5b15
+  FontColor #ac5b15
+  shadowing false
+}
+
+rectangle "gateway\n<size:10>[Container: Cloudflare Worker]</size>" <<archlettedemo.gateway>> {
+  rectangle "==auth.generateAnonId\n<size:10>[Component: function]</size>\n\nGenerate a random anonymous subject ID" <<archlettedemo.gateway.authgenerateAnonId>> as archlettedemo.gateway.authgenerateAnonId
+  rectangle "==auth.mintAnonymousToken\n<size:10>[Component: function]</size>\n\nMint an internal JWT for anonymous requests" <<archlettedemo.gateway.authmintAnonymousToken>> as archlettedemo.gateway.authmintAnonymousToken
+  rectangle "==auth.mintAuthenticatedToken\n<size:10>[Component: function]</size>\n\nValidate external Auth0 token and mint internal token TODO: Implement full Auth0 token validation when Auth0 is configured" <<archlettedemo.gateway.authmintAuthenticatedToken>> as archlettedemo.gateway.authmintAuthenticatedToken
+  rectangle "==auth.getOrMintInternalToken\n<size:10>[Component: function]</size>\n\nExtract or mint internal token for request" <<archlettedemo.gateway.authgetOrMintInternalToken>> as archlettedemo.gateway.authgetOrMintInternalToken
+}
+
+@enduml

@@ -1,0 +1,19 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["archlette-demo - System Context"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    1["<div style='font-weight: bold'>User</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>End user who interacts with<br />the Flarelette Demo UI</div>"]
+    style 1 fill:#08427b,stroke:#052e56,color:#ffffff
+    2("<div style='font-weight: bold'>Database</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Uses D1 database for storage.</div>")
+    style 2 fill:#999999,stroke:#6b6b6b,color:#ffffff
+    3("<div style='font-weight: bold'>ObjectStorage</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Uses R2 object storage<br />service for images.</div>")
+    style 3 fill:#999999,stroke:#6b6b6b,color:#ffffff
+    4("<div style='font-weight: bold'>archlette-demo</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Archlette demo application</div>")
+    style 4 fill:#1168bd,stroke:#0b4884,color:#ffffff
+
+    1-- "<div>Interacts with pages</div><div style='font-size: 70%'></div>" -->4
+    4-- "<div>Uses Database for external<br />system integration</div><div style='font-size: 70%'></div>" -->2
+    4-- "<div>Uses ObjectStorage for<br />external system integration</div><div style='font-size: 70%'></div>" -->3
+  end

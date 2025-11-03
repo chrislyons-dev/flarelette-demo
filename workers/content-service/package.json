@@ -1,5 +1,5 @@
 {
-  "name": "@flarelette-demo/content-service",
+  "name": "content-service",
   "version": "1.0.0",
   "description": "Content management service - news, events, pages (D1-backed)",
   "private": true,

@@ -1,4 +1,4 @@
-name = "flarelette-gateway"
+name = "gateway"
 main = "src/index.ts"
 compatibility_date = "2024-11-01"
 workers_dev = false
@@ -6,15 +6,15 @@ workers_dev = false
 # Service bindings to microservices
 [[services]]
 binding = "CONTENT_SERVICE"
-service = "flarelette-content-service"
+service = "content-service"
 
 [[services]]
 binding = "IMAGE_SERVICE"
-service = "flarelette-image-service"
+service = "image-service"
 
 [[services]]
 binding = "FORMS_SERVICE"
-service = "flarelette-forms-service"
+service = "forms-service"
 
 # Environment variables
 [vars]

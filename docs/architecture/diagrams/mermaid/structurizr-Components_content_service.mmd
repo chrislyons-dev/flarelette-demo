@@ -1,0 +1,21 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["archlette-demo - content-service - Components"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    2("<div style='font-weight: bold'>Database</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Uses D1 database for storage.</div>")
+    style 2 fill:#999999,stroke:#6b6b6b,color:#ffffff
+
+    subgraph 19 ["content-service"]
+      style 19 fill:#ffffff,stroke:#ac5b15,color:#ac5b15
+
+      20("<div style='font-weight: bold'>env</div><div style='font-size: 70%; margin-top: 0px'>[Component: module]</div><div style='font-size: 80%; margin-top:10px'>Environment bindings for<br />Content Service</div>")
+      style 20 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      21("<div style='font-weight: bold'>main</div><div style='font-size: 70%; margin-top: 0px'>[Component: module]</div><div style='font-size: 80%; margin-top:10px'>Content Service CMS<br />microservice for news,<br />events, roster, pages. All<br />endpoints require internal<br />JWT verification.</div>")
+      style 21 fill:#85bbf0,stroke:#5d82a8,color:#000000
+    end
+
+    21-- "<div>imports Env</div><div style='font-size: 70%'></div>" -->20
+    21-- "<div>Uses Database for external<br />system integration</div><div style='font-size: 70%'></div>" -->2
+  end

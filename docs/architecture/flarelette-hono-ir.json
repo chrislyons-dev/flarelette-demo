@@ -1,0 +1,981 @@
+{
+  "version": "1.0",
+  "system": {
+    "description": "Archlette demo application",
+    "name": "archlette-demo",
+    "repository": "https://github.com/chrislyons-dev/archlette-demo.git"
+  },
+  "actors": [
+    {
+      "description": "End user who interacts with the Flarelette Demo UI",
+      "tags": [],
+      "id": "user",
+      "name": "User",
+      "type": "Person",
+      "targets": ["flarelette_demo_ui__pages"]
+    },
+    {
+      "description": "Uses D1 database for storage.",
+      "tags": [],
+      "id": "database",
+      "name": "Database",
+      "type": "System",
+      "targets": []
+    },
+    {
+      "description": "Uses R2 object storage service for images.",
+      "tags": [],
+      "id": "objectstorage",
+      "name": "ObjectStorage",
+      "type": "System",
+      "targets": []
+    }
+  ],
+  "containers": [
+    {
+      "description": "Cloudflare Worker: flarelette-demo-ui | Astro frontend for Flarelette demo",
+      "tags": ["cloudflare", "worker"],
+      "props": {
+        "technology": "Cloudflare Workers",
+        "filePath": "C:/Users/chris/git/flarelette-demo/ui/wrangler.toml"
+      },
+      "id": "flarelette_demo_ui",
+      "name": "flarelette-demo-ui",
+      "type": "Cloudflare Worker",
+      "layer": "Application"
+    },
+    {
+      "description": "Cloudflare Worker: content-service | Content management service - news, events, pages (D1-backed)",
+      "tags": ["cloudflare", "worker"],
+      "props": {
+        "technology": "Cloudflare Workers",
+        "filePath": "C:/Users/chris/git/flarelette-demo/workers/content-service/wrangler.toml"
+      },
+      "id": "content_service",
+      "name": "content-service",
+      "type": "Cloudflare Worker",
+      "layer": "Application"
+    },
+    {
+      "description": "Cloudflare Worker: forms-service | Form submission service (contact, tryouts, etc.)",
+      "tags": ["cloudflare", "worker"],
+      "props": {
+        "technology": "Cloudflare Workers",
+        "filePath": "C:/Users/chris/git/flarelette-demo/workers/forms-service/wrangler.toml"
+      },
+      "id": "forms_service",
+      "name": "forms-service",
+      "type": "Cloudflare Worker",
+      "layer": "Application"
+    },
+    {
+      "description": "Cloudflare Worker: gateway | Flarelette Gateway - EdDSA signing and routing",
+      "tags": ["cloudflare", "worker"],
+      "props": {
+        "technology": "Cloudflare Workers",
+        "filePath": "C:/Users/chris/git/flarelette-demo/workers/gateway/wrangler.toml"
+      },
+      "id": "gateway",
+      "name": "gateway",
+      "type": "Cloudflare Worker",
+      "layer": "Application"
+    },
+    {
+      "description": "Cloudflare Worker: image-service | Image management service with R2 storage",
+      "tags": ["cloudflare", "worker"],
+      "props": {
+        "technology": "Cloudflare Workers",
+        "filePath": "C:/Users/chris/git/flarelette-demo/workers/image-service/wrangler.toml"
+      },
+      "id": "image_service",
+      "name": "image-service",
+      "type": "Cloudflare Worker",
+      "layer": "Application"
+    }
+  ],
+  "components": [
+    {
+      "description": "Component inferred from directory: layouts",
+      "id": "flarelette_demo_ui__layouts",
+      "containerId": "flarelette_demo_ui",
+      "name": "layouts",
+      "type": "module"
+    },
+    {
+      "description": "Home Page - Landing page for Flarelette Demo application",
+      "id": "flarelette_demo_ui__pages",
+      "containerId": "flarelette_demo_ui",
+      "name": "pages",
+      "type": "module"
+    },
+    {
+      "description": "Environment variable type definitions for Astro project",
+      "id": "flarelette_demo_ui__env",
+      "containerId": "flarelette_demo_ui",
+      "name": "env",
+      "type": "module"
+    },
+    {
+      "description": "Shared types for the",
+      "id": "flarelette_demo_ui__types",
+      "containerId": "flarelette_demo_ui",
+      "name": "types",
+      "type": "module"
+    },
+    {
+      "description": "Environment bindings for Content Service",
+      "id": "content_service__env",
+      "containerId": "content_service",
+      "name": "env",
+      "type": "module"
+    },
+    {
+      "description": "Content Service\n\nCMS microservice for news, events, roster, pages.\nAll endpoints require internal JWT verification.",
+      "id": "content_service__main",
+      "containerId": "content_service",
+      "name": "main",
+      "type": "module"
+    },
+    {
+      "description": "Forms Service\n\nHandles form submissions (contact, tryouts, etc.)\nAll endpoints require internal JWT verification.",
+      "id": "forms_service__main",
+      "containerId": "forms_service",
+      "name": "main",
+      "type": "module"
+    },
+    {
+      "description": "Authentication and token minting",
+      "id": "gateway__auth",
+      "containerId": "gateway",
+      "name": "auth",
+      "type": "module"
+    },
+    {
+      "description": "Environment bindings for Gateway Worker",
+      "id": "gateway__env",
+      "containerId": "gateway",
+      "name": "env",
+      "type": "module"
+    },
+    {
+      "description": "Flarelette Gateway\n\nEntry point for all API traffic. Routes requests to microservices\nwith internal JWT authentication (EdDSA signed).\n\nAll input is validated with Zod - zero trust!",
+      "id": "gateway__main",
+      "containerId": "gateway",
+      "name": "main",
+      "type": "module"
+    },
+    {
+      "description": "Input validation schemas using Zod\nAll input is validated - zero trust!",
+      "id": "gateway__validation",
+      "containerId": "gateway",
+      "name": "validation",
+      "type": "module"
+    },
+    {
+      "description": "Image Service\n\nManages image uploads and galleries using R2 storage.\nAll endpoints require internal JWT verification.",
+      "id": "image_service__main",
+      "containerId": "image_service",
+      "name": "main",
+      "type": "module"
+    }
+  ],
+  "code": [
+    {
+      "description": "Server-side render function for BaseLayout. Generates HTML output from Astro component template and props.",
+      "tags": [],
+      "id": "flarelette_demo_ui__layouts__baselayout",
+      "componentId": "flarelette_demo_ui__layouts",
+      "name": "BaseLayout",
+      "type": "function",
+      "documentation": {
+        "summary": "Server-side render function for BaseLayout. Generates HTML output from Astro component template and props.",
+        "remarks": [
+          "Auto-generated synthetic function representing Astro component render behavior"
+        ]
+      },
+      "returnType": "Promise<string>",
+      "parameters": [
+        {
+          "name": "props",
+          "type": "Props",
+          "description": "Component properties",
+          "optional": false
+        }
+      ],
+      "visibility": "public",
+      "isAsync": true,
+      "filePath": "C:\\Users\\chris\\git\\flarelette-demo\\ui\\src\\layouts\\BaseLayout.astro",
+      "lineNumber": 1
+    },
+    {
+      "tags": [],
+      "id": "flarelette_demo_ui__layouts__props",
+      "componentId": "flarelette_demo_ui__layouts",
+      "name": "Props",
+      "type": "interface",
+      "visibility": "internal",
+      "filePath": "C:\\Users\\chris\\git\\flarelette-demo\\ui\\src\\layouts\\BaseLayout.astro",
+      "lineNumber": 1
+    },
+    {
+      "description": "Server-side render function for contact. Generates HTML output from Astro component template and props.",
+      "tags": [],
+      "id": "flarelette_demo_ui__pages__contact",
+      "componentId": "flarelette_demo_ui__pages",
+      "name": "contact",
+      "type": "function",
+      "documentation": {
+        "summary": "Server-side render function for contact. Generates HTML output from Astro component template and props.",
+        "remarks": [
+          "Auto-generated synthetic function representing Astro component render behavior"
+        ]
+      },
+      "returnType": "Promise<string>",
+      "parameters": [],
+      "visibility": "public",
+      "isAsync": true,
+      "filePath": "C:\\Users\\chris\\git\\flarelette-demo\\ui\\src\\pages\\contact.astro",
+      "lineNumber": 1
+    },
+    {
+      "tags": [],
+      "id": "flarelette_demo_ui__pages__formatdate",
+      "componentId": "flarelette_demo_ui__pages",
+      "name": "formatDate",
+      "type": "function",
+      "returnType": "string",
+      "parameters": [
+        {
+          "name": "dateString",
+          "type": "string",
+          "optional": false
+        }
+      ],
+      "visibility": "internal",
+      "isAsync": false,
+      "filePath": "C:\\Users\\chris\\git\\flarelette-demo\\ui\\src\\pages\\events.astro",
+      "lineNumber": 20
+    },
+    {
+      "description": "Server-side render function for events. Generates HTML output from Astro component template and props.",
+      "tags": [],
+      "id": "flarelette_demo_ui__pages__events",
+      "componentId": "flarelette_demo_ui__pages",
+      "name": "events",
+      "type": "function",
+      "documentation": {
+        "summary": "Server-side render function for events. Generates HTML output from Astro component template and props.",
+        "remarks": [
+          "Auto-generated synthetic function representing Astro component render behavior"
+        ]
+      },
+      "returnType": "Promise<string>",
+      "parameters": [],
+      "visibility": "public",
+      "isAsync": true,
+      "filePath": "C:\\Users\\chris\\git\\flarelette-demo\\ui\\src\\pages\\events.astro",
+      "lineNumber": 1
+    },
+    {
+      "description": "Server-side render function for index. Generates HTML output from Astro component template and props.",
+      "tags": [],
+      "id": "flarelette_demo_ui__pages__index",
+      "componentId": "flarelette_demo_ui__pages",
+      "name": "index",
+      "type": "function",
+      "documentation": {
+        "summary": "Server-side render function for index. Generates HTML output from Astro component template and props.",
+        "remarks": [
+          "Auto-generated synthetic function representing Astro component render behavior"
+        ]
+      },
+      "returnType": "Promise<string>",
+      "parameters": [],
+      "visibility": "public",
+      "isAsync": true,
+      "filePath": "C:\\Users\\chris\\git\\flarelette-demo\\ui\\src\\pages\\index.astro",
+      "lineNumber": 1
+    },
+    {
+      "description": "Server-side render function for news. Generates HTML output from Astro component template and props.",
+      "tags": [],
+      "id": "flarelette_demo_ui__pages__news",
+      "componentId": "flarelette_demo_ui__pages",
+      "name": "news",
+      "type": "function",
+      "documentation": {
+        "summary": "Server-side render function for news. Generates HTML output from Astro component template and props.",
+        "remarks": [
+          "Auto-generated synthetic function representing Astro component render behavior"
+        ]
+      },
+      "returnType": "Promise<string>",
+      "parameters": [],
+      "visibility": "public",
+      "isAsync": true,
+      "filePath": "C:\\Users\\chris\\git\\flarelette-demo\\ui\\src\\pages\\news.astro",
+      "lineNumber": 1
+    },
+    {
+      "description": "Server-side render function for roster. Generates HTML output from Astro component template and props.",
+      "tags": [],
+      "id": "flarelette_demo_ui__pages__roster",
+      "componentId": "flarelette_demo_ui__pages",
+      "name": "roster",
+      "type": "function",
+      "documentation": {
+        "summary": "Server-side render function for roster. Generates HTML output from Astro component template and props.",
+        "remarks": [
+          "Auto-generated synthetic function representing Astro component render behavior"
+        ]
+      },
+      "returnType": "Promise<string>",
+      "parameters": [],
+      "visibility": "public",
+      "isAsync": true,
+      "filePath": "C:\\Users\\chris\\git\\flarelette-demo\\ui\\src\\pages\\roster.astro",
+      "lineNumber": 1
+    },
+    {
+      "description": "Generate a random anonymous subject ID",
+      "id": "gateway__auth__generateanonid",
+      "componentId": "gateway__auth",
+      "name": "generateAnonId",
+      "type": "function",
+      "documentation": {
+        "summary": "Generate a random anonymous subject ID"
+      },
+      "returnType": "string",
+      "parameters": [],
+      "visibility": "private",
+      "isAsync": false,
+      "filePath": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts",
+      "lineNumber": 12
+    },
+    {
+      "description": "Mint an internal JWT for anonymous requests",
+      "id": "gateway__auth__mintanonymoustoken",
+      "componentId": "gateway__auth",
+      "name": "mintAnonymousToken",
+      "type": "function",
+      "documentation": {
+        "summary": "Mint an internal JWT for anonymous requests"
+      },
+      "returnType": "Promise<string>",
+      "parameters": [
+        {
+          "name": "env",
+          "type": "import(\"C:/Users/chris/git/flarelette-demo/workers/gateway/src/env\").Env",
+          "optional": false
+        }
+      ],
+      "visibility": "public",
+      "isAsync": true,
+      "filePath": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts",
+      "lineNumber": 21
+    },
+    {
+      "description": "Validate external Auth0 token and mint internal token\nTODO: Implement full Auth0 token validation when Auth0 is configured",
+      "id": "gateway__auth__mintauthenticatedtoken",
+      "componentId": "gateway__auth",
+      "name": "mintAuthenticatedToken",
+      "type": "function",
+      "documentation": {
+        "summary": "Validate external Auth0 token and mint internal token\nTODO: Implement full Auth0 token validation when Auth0 is configured"
+      },
+      "returnType": "Promise<string>",
+      "parameters": [
+        {
+          "name": "authHeader",
+          "type": "string",
+          "optional": false
+        }
+      ],
+      "visibility": "public",
+      "isAsync": true,
+      "filePath": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts",
+      "lineNumber": 39
+    },
+    {
+      "description": "Extract or mint internal token for request",
+      "id": "gateway__auth__getormintinternaltoken",
+      "componentId": "gateway__auth",
+      "name": "getOrMintInternalToken",
+      "type": "function",
+      "documentation": {
+        "summary": "Extract or mint internal token for request"
+      },
+      "returnType": "Promise<string>",
+      "parameters": [
+        {
+          "name": "request",
+          "type": "Request",
+          "optional": false
+        },
+        {
+          "name": "env",
+          "type": "import(\"C:/Users/chris/git/flarelette-demo/workers/gateway/src/env\").Env",
+          "optional": false
+        }
+      ],
+      "visibility": "public",
+      "isAsync": true,
+      "filePath": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts",
+      "lineNumber": 62
+    }
+  ],
+  "deployments": [
+    {
+      "name": "production",
+      "environment": "production",
+      "platform": "Cloudflare Workers",
+      "instances": [
+        {
+          "id": "production__flarelette_demo_ui",
+          "containerRef": "flarelette_demo_ui",
+          "name": "flarelette-demo-ui",
+          "type": "Cloudflare Worker",
+          "vars": {
+            "PUBLIC_API_BASE_URL": "https://flarelette.chrislyons.dev",
+            "PUBLIC_SITE_URL": "https://flarelette.chrislyons.dev"
+          }
+        },
+        {
+          "id": "production__content_service",
+          "containerRef": "content_service",
+          "name": "content-service",
+          "type": "Cloudflare Worker",
+          "bindings": [
+            {
+              "type": "service",
+              "binding": "GATEWAY",
+              "service": "gateway"
+            },
+            {
+              "type": "d1",
+              "binding": "DB",
+              "database": "content-db"
+            }
+          ],
+          "vars": {
+            "JWT_ISS": "https://gateway.internal",
+            "JWT_AUD": "flarelette.mesh",
+            "JWKS_PATH": "/.well-known/jwks.json",
+            "JWKS_TTL_SECONDS": "600"
+          }
+        },
+        {
+          "id": "production__forms_service",
+          "containerRef": "forms_service",
+          "name": "forms-service",
+          "type": "Cloudflare Worker",
+          "bindings": [
+            {
+              "type": "service",
+              "binding": "GATEWAY",
+              "service": "gateway"
+            },
+            {
+              "type": "d1",
+              "binding": "DB",
+              "database": "forms-db"
+            }
+          ],
+          "vars": {
+            "JWT_ISS": "https://gateway.internal",
+            "JWT_AUD": "flarelette.mesh",
+            "JWKS_PATH": "/.well-known/jwks.json",
+            "JWKS_TTL_SECONDS": "600"
+          }
+        },
+        {
+          "id": "production__gateway",
+          "containerRef": "gateway",
+          "name": "gateway",
+          "type": "Cloudflare Worker",
+          "bindings": [
+            {
+              "type": "service",
+              "binding": "CONTENT_SERVICE",
+              "service": "content-service"
+            },
+            {
+              "type": "service",
+              "binding": "IMAGE_SERVICE",
+              "service": "image-service"
+            },
+            {
+              "type": "service",
+              "binding": "FORMS_SERVICE",
+              "service": "forms-service"
+            }
+          ],
+          "vars": {
+            "JWT_ISS": "https://gateway.internal",
+            "JWT_AUD": "flarelette.mesh",
+            "JWT_TTL_SECONDS": "900",
+            "JWKS_KID": "v1",
+            "AUTH0_DOMAIN": "your-tenant.auth0.com",
+            "AUTH0_AUDIENCE": "https://your-api.example.com"
+          }
+        },
+        {
+          "id": "production__image_service",
+          "containerRef": "image_service",
+          "name": "image-service",
+          "type": "Cloudflare Worker",
+          "bindings": [
+            {
+              "type": "service",
+              "binding": "GATEWAY",
+              "service": "gateway"
+            },
+            {
+              "type": "r2",
+              "binding": "IMAGES",
+              "bucket": "images"
+            }
+          ],
+          "vars": {
+            "JWT_ISS": "https://gateway.internal",
+            "JWT_AUD": "flarelette.mesh",
+            "JWKS_PATH": "/.well-known/jwks.json",
+            "JWKS_TTL_SECONDS": "600"
+          }
+        }
+      ]
+    },
+    {
+      "name": "preview",
+      "environment": "preview",
+      "platform": "Cloudflare Workers",
+      "instances": [
+        {
+          "id": "preview__flarelette_demo_ui",
+          "containerRef": "flarelette_demo_ui",
+          "name": "flarelette-demo-ui",
+          "type": "Cloudflare Worker",
+          "vars": {
+            "PUBLIC_API_BASE_URL": "https://preview.flarelette.chrislyons.dev",
+            "PUBLIC_SITE_URL": "https://preview.flarelette.chrislyons.dev"
+          }
+        }
+      ]
+    },
+    {
+      "name": "development",
+      "environment": "development",
+      "platform": "Cloudflare Workers",
+      "instances": [
+        {
+          "id": "development__flarelette_demo_ui",
+          "containerRef": "flarelette_demo_ui",
+          "name": "flarelette-demo-ui",
+          "type": "Cloudflare Worker",
+          "vars": {
+            "PUBLIC_API_BASE_URL": "http://localhost:8787",
+            "PUBLIC_SITE_URL": "http://localhost:4321"
+          }
+        }
+      ]
+    }
+  ],
+  "containerRelationships": [
+    {
+      "description": "Service binding: GATEWAY",
+      "tags": ["service-binding"],
+      "source": "content_service",
+      "destination": "gateway"
+    },
+    {
+      "description": "Service binding: GATEWAY",
+      "tags": ["service-binding"],
+      "source": "forms_service",
+      "destination": "gateway"
+    },
+    {
+      "description": "Service binding: CONTENT_SERVICE",
+      "tags": ["service-binding"],
+      "source": "gateway",
+      "destination": "content_service"
+    },
+    {
+      "description": "Service binding: IMAGE_SERVICE",
+      "tags": ["service-binding"],
+      "source": "gateway",
+      "destination": "image_service"
+    },
+    {
+      "description": "Service binding: FORMS_SERVICE",
+      "tags": ["service-binding"],
+      "source": "gateway",
+      "destination": "forms_service"
+    },
+    {
+      "description": "Service binding: GATEWAY",
+      "tags": ["service-binding"],
+      "source": "image_service",
+      "destination": "gateway"
+    }
+  ],
+  "componentRelationships": [
+    {
+      "description": "Uses BaseLayout component",
+      "tags": ["AUTO_DETECTED"],
+      "source": "flarelette_demo_ui__pages",
+      "destination": "flarelette_demo_ui__layouts"
+    },
+    {
+      "description": "Communicates with Gateway API for content, form, & image services",
+      "tags": [],
+      "source": "flarelette_demo_ui__pages",
+      "destination": "gateway"
+    },
+    {
+      "description": "imports defineConfig",
+      "source": "ui",
+      "destination": "astro/config",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports tailwind",
+      "source": "ui",
+      "destination": "@astrojs/tailwind",
+      "stereotype": "import"
+    },
+    {
+      "description": "Uses Database for external system integration",
+      "tags": [],
+      "source": "content_service__main",
+      "destination": "database"
+    },
+    {
+      "description": "imports Hono",
+      "source": "content_service__main",
+      "destination": "hono",
+      "stereotype": "import"
+    },
+    {
+      "description": "authGuard | policy | JwtPayload",
+      "source": "content_service__main",
+      "destination": "@chrislyons-dev/flarelette-hono",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports Env",
+      "source": "content_service__main",
+      "destination": "content_service__env",
+      "stereotype": "type-import"
+    },
+    {
+      "description": "Uses ObjectStorage for external system integration",
+      "tags": [],
+      "source": "forms_service__main",
+      "destination": "objectstorage"
+    },
+    {
+      "description": "imports Hono",
+      "source": "forms_service__main",
+      "destination": "hono",
+      "stereotype": "import"
+    },
+    {
+      "description": "authGuard | policy | JwtPayload",
+      "source": "forms_service__main",
+      "destination": "@chrislyons-dev/flarelette-hono",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports zValidator",
+      "source": "forms_service__main",
+      "destination": "@hono/zod-validator",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports z",
+      "source": "forms_service__main",
+      "destination": "zod",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports createToken",
+      "source": "gateway__auth",
+      "destination": "@chrislyons-dev/flarelette-jwt",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports Env",
+      "source": "gateway__auth",
+      "destination": "./env",
+      "stereotype": "type-import"
+    },
+    {
+      "description": "imports Hono",
+      "source": "gateway__main",
+      "destination": "hono",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports cors",
+      "source": "gateway__main",
+      "destination": "hono/cors",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports zValidator",
+      "source": "gateway__main",
+      "destination": "@hono/zod-validator",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports Env",
+      "source": "gateway__main",
+      "destination": "gateway__env",
+      "stereotype": "type-import"
+    },
+    {
+      "description": "imports getOrMintInternalToken",
+      "source": "gateway__main",
+      "destination": "gateway__auth",
+      "stereotype": "import"
+    },
+    {
+      "description": "paginationSchema | contactFormSchema | eventQuerySchema | newsQuerySchema",
+      "source": "gateway__main",
+      "destination": "./validation",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports z",
+      "source": "gateway__validation",
+      "destination": "zod",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports Hono",
+      "source": "image_service__main",
+      "destination": "hono",
+      "stereotype": "import"
+    },
+    {
+      "description": "authGuard | policy | JwtPayload",
+      "source": "image_service__main",
+      "destination": "@chrislyons-dev/flarelette-hono",
+      "stereotype": "import"
+    }
+  ],
+  "codeRelationships": [
+    {
+      "description": "imports defineConfig",
+      "source": "C:/Users/chris/git/flarelette-demo/ui/astro.config.mjs",
+      "destination": "astro/config:defineConfig",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports tailwind",
+      "source": "C:/Users/chris/git/flarelette-demo/ui/astro.config.mjs",
+      "destination": "@astrojs/tailwind:tailwind",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports Hono",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/content-service/src/index.ts",
+      "destination": "hono:Hono",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports authGuard",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/content-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:authGuard",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports policy",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/content-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:policy",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports JwtPayload",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/content-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:JwtPayload",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports Env",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/content-service/src/index.ts",
+      "destination": "./env:Env",
+      "stereotype": "type-import"
+    },
+    {
+      "description": "imports Hono",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/forms-service/src/index.ts",
+      "destination": "hono:Hono",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports authGuard",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/forms-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:authGuard",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports policy",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/forms-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:policy",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports JwtPayload",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/forms-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:JwtPayload",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports zValidator",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/forms-service/src/index.ts",
+      "destination": "@hono/zod-validator:zValidator",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports z",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/forms-service/src/index.ts",
+      "destination": "zod:z",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports createToken",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts",
+      "destination": "@chrislyons-dev/flarelette-jwt:createToken",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports Env",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts",
+      "destination": "./env:Env",
+      "stereotype": "type-import"
+    },
+    {
+      "description": "imports Hono",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/index.ts",
+      "destination": "hono:Hono",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports cors",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/index.ts",
+      "destination": "hono/cors:cors",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports zValidator",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/index.ts",
+      "destination": "@hono/zod-validator:zValidator",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports Env",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/index.ts",
+      "destination": "./env:Env",
+      "stereotype": "type-import"
+    },
+    {
+      "description": "imports getOrMintInternalToken",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/index.ts",
+      "destination": "./auth:getOrMintInternalToken",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports paginationSchema",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/index.ts",
+      "destination": "./validation:paginationSchema",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports contactFormSchema",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/index.ts",
+      "destination": "./validation:contactFormSchema",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports eventQuerySchema",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/index.ts",
+      "destination": "./validation:eventQuerySchema",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports newsQuerySchema",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/index.ts",
+      "destination": "./validation:newsQuerySchema",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports z",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/validation.ts",
+      "destination": "zod:z",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports Hono",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/image-service/src/index.ts",
+      "destination": "hono:Hono",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports authGuard",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/image-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:authGuard",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports policy",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/image-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:policy",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports JwtPayload",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/image-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:JwtPayload",
+      "stereotype": "import"
+    }
+  ],
+  "deploymentRelationships": [
+    {
+      "description": "Service binding: GATEWAY",
+      "tags": ["service-binding", "runtime"],
+      "source": "production__content_service",
+      "destination": "production__gateway"
+    },
+    {
+      "description": "Service binding: GATEWAY",
+      "tags": ["service-binding", "runtime"],
+      "source": "production__forms_service",
+      "destination": "production__gateway"
+    },
+    {
+      "description": "Service binding: CONTENT_SERVICE",
+      "tags": ["service-binding", "runtime"],
+      "source": "production__gateway",
+      "destination": "production__content_service"
+    },
+    {
+      "description": "Service binding: IMAGE_SERVICE",
+      "tags": ["service-binding", "runtime"],
+      "source": "production__gateway",
+      "destination": "production__image_service"
+    },
+    {
+      "description": "Service binding: FORMS_SERVICE",
+      "tags": ["service-binding", "runtime"],
+      "source": "production__gateway",
+      "destination": "production__forms_service"
+    },
+    {
+      "description": "Service binding: GATEWAY",
+      "tags": ["service-binding", "runtime"],
+      "source": "production__image_service",
+      "destination": "production__gateway"
+    }
+  ]
+}

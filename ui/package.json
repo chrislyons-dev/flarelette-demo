@@ -1,5 +1,5 @@
 {
-  "name": "@flarelette-demo/ui",
+  "name": "flarelette-demo-ui",
   "version": "1.0.0",
   "description": "Astro frontend for Flarelette demo",
   "private": true,

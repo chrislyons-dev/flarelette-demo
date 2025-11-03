@@ -1,5 +1,7 @@
 /**
- * Shared types for the UI
+ * Shared types for the
+ *
+ * @module types
  */
 
 export interface Event {

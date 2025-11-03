@@ -20,6 +20,7 @@ extractors:
   - use: extractors/builtin/basic-wrangler
     inputs:
       include:
+        - './ui/wrangler.toml'
         - './workers/content-service/wrangler.toml'
         - './workers/forms-service/wrangler.toml'
         - './workers/gateway/wrangler.toml'
@@ -61,7 +62,7 @@ extractors:
     inputs:
       include:
         - './workers/content-service/**/*.js'
-        - './workers/content-serviceui/**/*.cjs'
+        - './workers/content-service/**/*.cjs'
         - './workers/content-service/**/*.mjs'
         - './workers/content-service/**/*.jsx'
         - './workers/content-service/**/*.ts'

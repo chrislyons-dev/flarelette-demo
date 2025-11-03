@@ -1,0 +1,55 @@
+@startuml
+set separator none
+title archlette-demo - System Context
+
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
+  defaultFontName "Arial"
+}
+
+hide stereotype
+
+skinparam rectangle<<Database>> {
+  BackgroundColor #999999
+  FontColor #ffffff
+  BorderColor #6b6b6b
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<ObjectStorage>> {
+  BackgroundColor #999999
+  FontColor #ffffff
+  BorderColor #6b6b6b
+  roundCorner 20
+  shadowing false
+}
+skinparam person<<User>> {
+  BackgroundColor #08427b
+  FontColor #ffffff
+  BorderColor #052e56
+  shadowing false
+}
+skinparam rectangle<<archlettedemo>> {
+  BackgroundColor #1168bd
+  FontColor #ffffff
+  BorderColor #0b4884
+  roundCorner 20
+  shadowing false
+}
+
+person "==User\n<size:10>[Person]</size>\n\nEnd user who interacts with the Flarelette Demo UI" <<User>> as User
+rectangle "==Database\n<size:10>[Software System]</size>\n\nUses D1 database for storage." <<Database>> as Database
+rectangle "==ObjectStorage\n<size:10>[Software System]</size>\n\nUses R2 object storage service for images." <<ObjectStorage>> as ObjectStorage
+rectangle "==archlette-demo\n<size:10>[Software System]</size>\n\nArchlette demo application" <<archlettedemo>> as archlettedemo
+
+User -[#707070,thickness=2]-> archlettedemo : "<color:#707070>Interacts with pages"
+archlettedemo -[#707070,thickness=2]-> Database : "<color:#707070>Uses Database for external system integration"
+archlettedemo -[#707070,thickness=2]-> ObjectStorage : "<color:#707070>Uses ObjectStorage for external system integration"
+@enduml

@@ -1,0 +1,101 @@
+@startuml
+set separator none
+title archlette-demo - Containers
+
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
+  defaultFontName "Arial"
+}
+
+hide stereotype
+
+skinparam rectangle<<Database>> {
+  BackgroundColor #999999
+  FontColor #ffffff
+  BorderColor #6b6b6b
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<ObjectStorage>> {
+  BackgroundColor #999999
+  FontColor #ffffff
+  BorderColor #6b6b6b
+  roundCorner 20
+  shadowing false
+}
+skinparam person<<User>> {
+  BackgroundColor #08427b
+  FontColor #ffffff
+  BorderColor #052e56
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.contentservice>> {
+  BackgroundColor #f6821f
+  FontColor #ffffff
+  BorderColor #ac5b15
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.flarelettedemoui>> {
+  BackgroundColor #f6821f
+  FontColor #ffffff
+  BorderColor #ac5b15
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.formsservice>> {
+  BackgroundColor #f6821f
+  FontColor #ffffff
+  BorderColor #ac5b15
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.gateway>> {
+  BackgroundColor #f6821f
+  FontColor #ffffff
+  BorderColor #ac5b15
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.imageservice>> {
+  BackgroundColor #f6821f
+  FontColor #ffffff
+  BorderColor #ac5b15
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo>> {
+  BorderColor #0b4884
+  FontColor #0b4884
+  shadowing false
+}
+
+person "==User\n<size:10>[Person]</size>\n\nEnd user who interacts with the Flarelette Demo UI" <<User>> as User
+rectangle "==Database\n<size:10>[Software System]</size>\n\nUses D1 database for storage." <<Database>> as Database
+rectangle "==ObjectStorage\n<size:10>[Software System]</size>\n\nUses R2 object storage service for images." <<ObjectStorage>> as ObjectStorage
+
+rectangle "archlette-demo\n<size:10>[Software System]</size>" <<archlettedemo>> {
+  rectangle "==content-service\n<size:10>[Container: Cloudflare Worker]</size>\n\nCloudflare Worker: content-service | Content management service - news, events, pages (D1-backed)" <<archlettedemo.contentservice>> as archlettedemo.contentservice
+  rectangle "==forms-service\n<size:10>[Container: Cloudflare Worker]</size>\n\nCloudflare Worker: forms-service | Form submission service (contact, tryouts, etc.)" <<archlettedemo.formsservice>> as archlettedemo.formsservice
+  rectangle "==gateway\n<size:10>[Container: Cloudflare Worker]</size>\n\nCloudflare Worker: gateway | Flarelette Gateway - EdDSA signing and routing" <<archlettedemo.gateway>> as archlettedemo.gateway
+  rectangle "==image-service\n<size:10>[Container: Cloudflare Worker]</size>\n\nCloudflare Worker: image-service | Image management service with R2 storage" <<archlettedemo.imageservice>> as archlettedemo.imageservice
+  rectangle "==flarelette-demo-ui\n<size:10>[Container: Cloudflare Worker]</size>\n\nCloudflare Worker: flarelette-demo-ui | Astro frontend for Flarelette demo" <<archlettedemo.flarelettedemoui>> as archlettedemo.flarelettedemoui
+}
+
+archlettedemo.contentservice -[#707070,thickness=2]-> archlettedemo.gateway : "<color:#707070>Service binding: GATEWAY"
+archlettedemo.formsservice -[#707070,thickness=2]-> archlettedemo.gateway : "<color:#707070>Service binding: GATEWAY"
+archlettedemo.gateway -[#707070,thickness=2]-> archlettedemo.contentservice : "<color:#707070>Service binding: CONTENT_SERVICE"
+archlettedemo.gateway -[#707070,thickness=2]-> archlettedemo.imageservice : "<color:#707070>Service binding: IMAGE_SERVICE"
+archlettedemo.gateway -[#707070,thickness=2]-> archlettedemo.formsservice : "<color:#707070>Service binding: FORMS_SERVICE"
+archlettedemo.imageservice -[#707070,thickness=2]-> archlettedemo.gateway : "<color:#707070>Service binding: GATEWAY"
+User -[#707070,thickness=2]-> archlettedemo.flarelettedemoui : "<color:#707070>Interacts with pages"
+archlettedemo.contentservice -[#707070,thickness=2]-> Database : "<color:#707070>Uses Database for external system integration"
+archlettedemo.formsservice -[#707070,thickness=2]-> ObjectStorage : "<color:#707070>Uses ObjectStorage for external system integration"
+@enduml

@@ -1,0 +1,46 @@
+@startuml
+set separator none
+title archlette-demo - forms-service - Components
+
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
+  defaultFontName "Arial"
+}
+
+hide stereotype
+
+skinparam rectangle<<ObjectStorage>> {
+  BackgroundColor #999999
+  FontColor #ffffff
+  BorderColor #6b6b6b
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.formsservice.main>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.formsservice>> {
+  BorderColor #ac5b15
+  FontColor #ac5b15
+  shadowing false
+}
+
+rectangle "==ObjectStorage\n<size:10>[Software System]</size>\n\nUses R2 object storage service for images." <<ObjectStorage>> as ObjectStorage
+
+rectangle "forms-service\n<size:10>[Container: Cloudflare Worker]</size>" <<archlettedemo.formsservice>> {
+  rectangle "==main\n<size:10>[Component: module]</size>\n\nForms Service Handles form submissions (contact, tryouts, etc.) All endpoints require internal JWT verification." <<archlettedemo.formsservice.main>> as archlettedemo.formsservice.main
+}
+
+archlettedemo.formsservice.main -[#707070,thickness=2]-> ObjectStorage : "<color:#707070>Uses ObjectStorage for external system integration"
+@enduml

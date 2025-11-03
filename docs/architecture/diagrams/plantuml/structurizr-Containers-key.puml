@@ -1,0 +1,47 @@
+@startuml
+set separator none
+
+skinparam {
+  shadowing false
+  arrowFontSize 15
+  defaultTextAlignment center
+  wrapWidth 100
+  maxMessageSize 100
+  defaultFontName "Arial"
+}
+hide stereotype
+
+skinparam rectangle<<_transparent>> {
+  BorderColor transparent
+  BackgroundColor transparent
+  FontColor transparent
+}
+
+skinparam rectangle<<1>> {
+  BackgroundColor #f6821f
+  FontColor #ffffff
+  BorderColor #ac5b15
+  roundCorner 20
+}
+rectangle "==Container, Cloudflare Worker" <<1>>
+
+skinparam person<<2>> {
+  BackgroundColor #08427b
+  FontColor #ffffff
+  BorderColor #052e56
+}
+person "==Person" <<2>>
+
+skinparam rectangle<<3>> {
+  BackgroundColor #999999
+  FontColor #ffffff
+  BorderColor #6b6b6b
+  roundCorner 20
+}
+rectangle "==Software System, External" <<3>>
+
+rectangle "." <<_transparent>> as 4
+4 -[#707070,thickness=2]-> 4 : "<color:#707070>Relationship"
+
+
+@enduml

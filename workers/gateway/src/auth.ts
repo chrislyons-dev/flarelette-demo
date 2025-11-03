@@ -1,5 +1,7 @@
 /**
  * Authentication and token minting
+ *
+ * @module auth
  */
 import { createToken } from '@chrislyons-dev/flarelette-jwt'
 import type { Env } from './env'

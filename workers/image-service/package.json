@@ -1,5 +1,5 @@
 {
-  "name": "@flarelette-demo/image-service",
+  "name": "image-service",
   "version": "1.0.0",
   "description": "Image management service with R2 storage",
   "private": true,

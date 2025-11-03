@@ -5,6 +5,8 @@
  * with internal JWT authentication (EdDSA signed).
  *
  * All input is validated with Zod - zero trust!
+ *
+ * @module main
  */
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'

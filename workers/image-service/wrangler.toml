@@ -1,4 +1,4 @@
-name = "flarelette-image-service"
+name = "image-service"
 main = "src/index.ts"
 compatibility_date = "2024-11-01"
 workers_dev = false
@@ -6,12 +6,12 @@ workers_dev = false
 # Service binding to gateway (for JWKS)
 [[services]]
 binding = "GATEWAY"
-service = "flarelette-gateway"
+service = "gateway"
 
 # R2 bucket binding
 [[r2_buckets]]
 binding = "IMAGES"
-bucket_name = "flarelette-images"
+bucket_name = "images"
 
 # Environment variables
 [vars]
