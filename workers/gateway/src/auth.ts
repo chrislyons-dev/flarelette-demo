@@ -3,8 +3,30 @@
  *
  * @module auth
  */
-import { createToken } from '@chrislyons-dev/flarelette-jwt'
+import { signWithConfig, createHS512Config } from '@chrislyons-dev/flarelette-jwt'
 import type { Env } from './env'
+
+// Lazy-initialized JWT config
+let _jwtConfig: ReturnType<typeof createHS512Config> | null = null
+
+/**
+ * Get or create JWT config (lazily initialized from environment)
+ */
+function getJwtConfig(env: Env): ReturnType<typeof createHS512Config> {
+  if (!_jwtConfig) {
+    // Use env.JWT_SECRET in production, fallback to dev secret locally (64 bytes for HS512)
+    const secret =
+      env.JWT_SECRET ||
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+
+    _jwtConfig = createHS512Config(secret, {
+      iss: env.JWT_ISS,
+      aud: env.JWT_AUD,
+      ttlSeconds: parseInt(env.JWT_TTL_SECONDS, 10),
+    })
+  }
+  return _jwtConfig
+}
 
 /**
  * Generate a random anonymous subject ID
@@ -19,17 +41,15 @@ function generateAnonId(): string {
  * Mint an internal JWT for anonymous requests
  */
 export async function mintAnonymousToken(env: Env): Promise<string> {
+  const config = getJwtConfig(env)
+
   const payload = {
     sub: generateAnonId(),
-    iss: env.JWT_ISS,
-    aud: env.JWT_AUD,
     roles: ['anonymous'],
     permissions: ['read:public'],
-    iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + parseInt(env.JWT_TTL_SECONDS, 10),
   }
 
-  return createToken(payload)
+  return signWithConfig(payload, config)
 }
 
 /**

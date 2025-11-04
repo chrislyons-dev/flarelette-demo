@@ -19,5 +19,6 @@ export interface Env {
   AUTH0_AUDIENCE: string
 
   // HS512 shared secret (injected via wrangler secret or .dev.vars)
-  JWT_SECRET: string
+  // Optional - falls back to dev secret if not set
+  JWT_SECRET?: string
 }
