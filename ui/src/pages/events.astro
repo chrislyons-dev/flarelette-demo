@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import type { Event } from '../types'
 
-const apiBaseUrl = import.meta.env.PUBLIC_API_BASE_URL
+const apiBaseUrl = `${Astro.url.protocol}//${Astro.url.host}`
 let events: Event[] = []
 let error: string | null = null
 

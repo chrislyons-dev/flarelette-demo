@@ -4,15 +4,14 @@
  * @module env
  */
 export interface Env {
-  // Service binding to gateway (for JWKS)
-  GATEWAY: Fetcher
-
   // D1 database
   DB: D1Database
 
-  // JWT configuration
+  // JWT configuration (HS512 shared secret)
   JWT_ISS: string
   JWT_AUD: string
-  JWKS_PATH: string
-  JWKS_TTL_SECONDS: string
+
+  // HS512 shared secret (same as gateway)
+  // Optional - falls back to dev secret if not set
+  JWT_SECRET?: string
 }

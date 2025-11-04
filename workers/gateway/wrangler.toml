@@ -1,6 +1,7 @@
 name = "gateway"
 main = "src/index.ts"
 compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
 workers_dev = false
 
 # Service bindings to microservices
@@ -24,6 +25,9 @@ JWT_TTL_SECONDS = "900"
 
 # HS512 shared secret (set via wrangler secret put JWT_SECRET)
 # For local dev, use .dev.vars file
+
+# Local dev: Set USE_HTTP_SERVICES="true" in .dev.vars to use HTTP instead of service bindings
+# Production: Leave unset to use service bindings
 
 # Auth0 configuration (placeholders - configure in production)
 AUTH0_DOMAIN = "your-tenant.auth0.com"

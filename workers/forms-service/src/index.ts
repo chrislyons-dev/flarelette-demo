@@ -8,20 +8,48 @@
  * @actor Database {System} {out} Uses D1 database service for form submissions.
  */
 import { Hono } from 'hono'
-import { authGuard, policy } from '@chrislyons-dev/flarelette-hono'
-import type { JwtPayload } from '@chrislyons-dev/flarelette-hono'
+import type { Context, Next } from 'hono'
+import { authGuardWithConfig, createHS512Config, policy } from '@chrislyons-dev/flarelette-hono'
+import type { JwtPayload, Policy } from '@chrislyons-dev/flarelette-hono'
 import { zValidator } from '@hono/zod-validator'
 import { z } from 'zod'
 
 interface Env {
-  GATEWAY: Fetcher
   DB: D1Database
   JWT_ISS: string
   JWT_AUD: string
-  JWKS_SERVICE_NAME: string
+  JWT_SECRET?: string
+}
+
+// Lazy-initialized JWT config
+let _jwtConfig: ReturnType<typeof createHS512Config> | null = null
+
+/**
+ * Get or create JWT config (lazily initialized from environment)
+ */
+function getJwtConfig(env: Env): ReturnType<typeof createHS512Config> {
+  if (!_jwtConfig) {
+    const secret =
+      env.JWT_SECRET ||
+      'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+    _jwtConfig = createHS512Config(secret, {
+      iss: env.JWT_ISS,
+      aud: env.JWT_AUD,
+    })
+  }
+  return _jwtConfig
 }
 
 const app = new Hono<{ Bindings: Env; Variables: { auth: JwtPayload } }>()
+
+// Helper function to create authGuard with config from env
+const authGuard = (policyObj?: Policy) => {
+  return async (c: Context<{ Bindings: Env; Variables: { auth: JwtPayload } }>, next: Next) => {
+    const config = getJwtConfig(c.env)
+    // @ts-expect-error - Type mismatch between Context types, but functionally compatible
+    return authGuardWithConfig(config, policyObj)(c, next)
+  }
+}
 
 /**
  * Validation schemas (already validated at gateway, but defense in depth)
