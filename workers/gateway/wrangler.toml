@@ -21,7 +21,9 @@ service = "forms-service"
 JWT_ISS = "https://gateway.internal"
 JWT_AUD = "flarelette.mesh"
 JWT_TTL_SECONDS = "900"
-JWKS_KID = "v1"
+
+# HS512 shared secret (set via wrangler secret put JWT_SECRET)
+# For local dev, use .dev.vars file
 
 # Auth0 configuration (placeholders - configure in production)
 AUTH0_DOMAIN = "your-tenant.auth0.com"

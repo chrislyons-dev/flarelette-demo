@@ -35,9 +35,10 @@ const mf = new Miniflare({
     // Content Service
     {
       name: 'content-service',
-      scriptPath: join(rootDir, 'workers/content-service/src/index.ts'),
+      scriptPath: join(rootDir, 'workers/content-service/dist/index.js'),
       modules: true,
       compatibilityDate: '2024-11-01',
+      compatibilityFlags: ['nodejs_compat'],
       bindings: {
         JWT_ISS: 'https://gateway.internal',
         JWT_AUD: 'flarelette.mesh',
@@ -55,9 +56,10 @@ const mf = new Miniflare({
     // Image Service
     {
       name: 'image-service',
-      scriptPath: join(rootDir, 'workers/image-service/src/index.ts'),
+      scriptPath: join(rootDir, 'workers/image-service/dist/index.js'),
       modules: true,
       compatibilityDate: '2024-11-01',
+      compatibilityFlags: ['nodejs_compat'],
       bindings: {
         JWT_ISS: 'https://gateway.internal',
         JWT_AUD: 'flarelette.mesh',
@@ -75,9 +77,10 @@ const mf = new Miniflare({
     // Forms Service
     {
       name: 'forms-service',
-      scriptPath: join(rootDir, 'workers/forms-service/src/index.ts'),
+      scriptPath: join(rootDir, 'workers/forms-service/dist/index.js'),
       modules: true,
       compatibilityDate: '2024-11-01',
+      compatibilityFlags: ['nodejs_compat'],
       bindings: {
         JWT_ISS: 'https://gateway.internal',
         JWT_AUD: 'flarelette.mesh',
@@ -95,11 +98,10 @@ const mf = new Miniflare({
     // Gateway (main entry point)
     {
       name: 'gateway',
-      scriptPath: join(rootDir, 'workers/gateway/src/index.ts'),
+      scriptPath: join(rootDir, 'workers/gateway/dist/index.js'),
       modules: true,
       compatibilityDate: '2024-11-01',
-      host: '127.0.0.1',
-      port: 8787,
+      compatibilityFlags: ['nodejs_compat'],
       bindings: {
         JWT_ISS: 'https://gateway.internal',
         JWT_AUD: 'flarelette.mesh',

@@ -14,7 +14,7 @@
     "d1:seed": "wrangler d1 execute content-db --local --file=./seed.sql"
   },
   "dependencies": {
-    "@chrislyons-dev/flarelette-hono": "^1.0.0",
+    "@chrislyons-dev/flarelette-hono": "^1.0.2",
     "hono": "^4.0.0",
     "zod": "^3.22.0",
     "@hono/zod-validator": "^0.2.0"

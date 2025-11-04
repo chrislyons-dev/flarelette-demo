@@ -67,8 +67,8 @@ importers:
   workers/content-service:
     dependencies:
       '@chrislyons-dev/flarelette-hono':
-        specifier: ^1.0.0
-        version: 1.0.0(@hono/zod-validator@0.2.2(hono@4.10.4)(zod@3.25.76))(hono@4.10.4)(zod@3.25.76)
+        specifier: ^1.0.2
+        version: 1.0.2(@hono/zod-validator@0.2.2(hono@4.10.4)(zod@3.25.76))(hono@4.10.4)(zod@3.25.76)
       '@hono/zod-validator':
         specifier: ^0.2.0
         version: 0.2.2(hono@4.10.4)(zod@3.25.76)
@@ -104,8 +104,8 @@ importers:
   workers/forms-service:
     dependencies:
       '@chrislyons-dev/flarelette-hono':
-        specifier: ^1.0.0
-        version: 1.0.0(@hono/zod-validator@0.2.2(hono@4.10.4)(zod@3.25.76))(hono@4.10.4)(zod@3.25.76)
+        specifier: ^1.0.2
+        version: 1.0.2(@hono/zod-validator@0.2.2(hono@4.10.4)(zod@3.25.76))(hono@4.10.4)(zod@3.25.76)
       '@hono/zod-validator':
         specifier: ^0.2.0
         version: 0.2.2(hono@4.10.4)(zod@3.25.76)
@@ -141,7 +141,7 @@ importers:
   workers/gateway:
     dependencies:
       '@chrislyons-dev/flarelette-jwt':
-        specifier: ^1.0.0
+        specifier: ^1.10.0
         version: 1.10.1
       '@hono/zod-openapi':
         specifier: ^0.9.0
@@ -181,8 +181,8 @@ importers:
   workers/image-service:
     dependencies:
       '@chrislyons-dev/flarelette-hono':
-        specifier: ^1.0.0
-        version: 1.0.0(@hono/zod-validator@0.2.2(hono@4.10.4)(zod@3.25.76))(hono@4.10.4)(zod@3.25.76)
+        specifier: ^1.0.2
+        version: 1.0.2(@hono/zod-validator@0.2.2(hono@4.10.4)(zod@3.25.76))(hono@4.10.4)(zod@3.25.76)
       hono:
         specifier: ^4.0.0
         version: 4.10.4
@@ -356,8 +356,8 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  '@chrislyons-dev/flarelette-hono@1.0.0':
-    resolution: {integrity: sha512-WqEKxIDMIOdzZVOi5dEemQYHlOiIyJclotJ7MWr7bDykLI/d88wW5Ou2Ublgbgf1t2NY+6EZk/nzBW6eIrVG2A==}
+  '@chrislyons-dev/flarelette-hono@1.0.2':
+    resolution: {integrity: sha512-0NM6CEMCmCdIJ28T/RkYM0gLoz9i7elQha/65J3FgWIAf1cK9i6WnwdpNL0Lw+stzCIoya8UMIG4kfSJiXdFbQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       '@hono/zod-validator': ^0.2.0
@@ -3821,7 +3821,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@chrislyons-dev/flarelette-hono@1.0.0(@hono/zod-validator@0.2.2(hono@4.10.4)(zod@3.25.76))(hono@4.10.4)(zod@3.25.76)':
+  '@chrislyons-dev/flarelette-hono@1.0.2(@hono/zod-validator@0.2.2(hono@4.10.4)(zod@3.25.76))(hono@4.10.4)(zod@3.25.76)':
     dependencies:
       '@chrislyons-dev/flarelette-jwt': 1.10.1
       hono: 4.10.4

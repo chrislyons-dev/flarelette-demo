@@ -44,27 +44,6 @@ app.get('/api/health', (c) => {
 })
 
 /**
- * JWKS endpoint (for microservices to verify internal JWTs)
- * Accessed via Service Binding - not exposed publicly
- */
-app.get('/.well-known/jwks.json', async (c) => {
-  // TODO: Serve JWKS from KV or static file
-  // For now, return placeholder
-  return c.json({
-    keys: [
-      {
-        kty: 'OKP',
-        crv: 'Ed25519',
-        kid: c.env.JWKS_KID,
-        use: 'sig',
-        alg: 'EdDSA',
-        // x will be populated from ED25519_PRIVATE_PEM during deployment
-      },
-    ],
-  })
-})
-
-/**
  * Content Service Routes
  */
 

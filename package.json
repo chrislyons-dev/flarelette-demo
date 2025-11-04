@@ -9,6 +9,7 @@
     "dev": "node scripts/dev.js",
     "dev:workers": "tsx scripts/miniflare.ts",
     "dev:ui": "cd ui && pnpm dev",
+    "install": "cd ui && npm install && cd ../workers/gateway && npm install && cd ../content-service && npm install && cd ../forms-service && npm install && cd ../image-service && npm install && cd ../../",
     "build": "pnpm -r build",
     "deploy": "pnpm -r deploy",
     "setup": "node scripts/setup.js",

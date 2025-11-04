@@ -5,10 +5,11 @@
  * All endpoints require internal JWT verification.
  *
  * @module main
- * @actor ObjectStorage {System} {out} Uses R2 object storage service for images.
+ * @actor Database {System} {out} Uses D1 database service for form submissions.
  */
 import { Hono } from 'hono'
-import { authGuard, policy, type JwtPayload } from '@chrislyons-dev/flarelette-hono'
+import { authGuard, policy } from '@chrislyons-dev/flarelette-hono'
+import type { JwtPayload } from '@chrislyons-dev/flarelette-hono'
 import { zValidator } from '@hono/zod-validator'
 import { z } from 'zod'
 

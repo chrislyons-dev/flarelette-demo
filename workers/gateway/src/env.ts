@@ -13,13 +13,11 @@ export interface Env {
   JWT_ISS: string
   JWT_AUD: string
   JWT_TTL_SECONDS: string
-  JWKS_KID: string
 
   // Auth0 configuration
   AUTH0_DOMAIN: string
   AUTH0_AUDIENCE: string
 
-  // Secrets (injected via GitHub Actions)
-  ED25519_PRIVATE_PEM?: string
-  JWT_SECRET?: string
+  // HS512 shared secret (injected via wrangler secret or .dev.vars)
+  JWT_SECRET: string
 }

@@ -3,11 +3,6 @@ main = "src/index.ts"
 compatibility_date = "2024-11-01"
 workers_dev = false
 
-# Service binding to gateway (for JWKS)
-[[services]]
-binding = "GATEWAY"
-service = "gateway"
-
 # R2 bucket binding
 [[r2_buckets]]
 binding = "IMAGES"
@@ -17,5 +12,6 @@ bucket_name = "images"
 [vars]
 JWT_ISS = "https://gateway.internal"
 JWT_AUD = "flarelette.mesh"
-JWKS_PATH = "/.well-known/jwks.json"
-JWKS_TTL_SECONDS = "600"
+
+# HS512 shared secret (set via wrangler secret put JWT_SECRET)
+# For local dev, use .dev.vars file
