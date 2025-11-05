@@ -3,7 +3,7 @@ workspace "archlette-demo" "Archlette demo application" {
     model {
         # External actors
         user = person "User" "End user who interacts with the Flarelette Demo UI"
-        database = softwareSystem "Database" "Uses D1 database for storage." "External"
+        database = softwareSystem "Database" "Uses D1 database for news & events storage. | Uses D1 database service for form submissions." "External"
         objectstorage = softwareSystem "ObjectStorage" "Uses R2 object storage service for images." "External"
         # archlette-demo System
         archlette_demo = softwareSystem "archlette-demo" {
@@ -100,6 +100,15 @@ workspace "archlette-demo" "Archlette demo application" {
                 }
 
                 # Code elements (classes, functions)
+                content_service__main__getjwtconfig = component "main.getJwtConfig" {
+                    description "Get or create JWT config (lazily initialized from environment)"
+                    technology "function"
+                    tags "Code"
+                }
+                content_service__main__authguard = component "main.authGuard" {
+                    technology "function"
+                    tags "Code"
+                }
 
                 # Component relationships
                 content_service__main -> content_service__env "imports Env"
@@ -121,6 +130,15 @@ workspace "archlette-demo" "Archlette demo application" {
                 }
 
                 # Code elements (classes, functions)
+                forms_service__main__getjwtconfig = component "main.getJwtConfig" {
+                    description "Get or create JWT config (lazily initialized from environment)"
+                    technology "function"
+                    tags "Code"
+                }
+                forms_service__main__authguard = component "main.authGuard" {
+                    technology "function"
+                    tags "Code"
+                }
             }
 
 
@@ -151,6 +169,11 @@ workspace "archlette-demo" "Archlette demo application" {
                 }
 
                 # Code elements (classes, functions)
+                gateway__auth__getjwtconfig = component "auth.getJwtConfig" {
+                    description "Get or create JWT config (lazily initialized from environment)"
+                    technology "function"
+                    tags "Code"
+                }
                 gateway__auth__generateanonid = component "auth.generateAnonId" {
                     description "Generate a random anonymous subject ID"
                     technology "function"
@@ -168,6 +191,14 @@ workspace "archlette-demo" "Archlette demo application" {
                 }
                 gateway__auth__getormintinternaltoken = component "auth.getOrMintInternalToken" {
                     description "Extract or mint internal token for request"
+                    technology "function"
+                    tags "Code"
+                }
+                gateway__main__getserviceurl = component "main.getServiceUrl" {
+                    technology "function"
+                    tags "Code"
+                }
+                gateway__main__callservice = component "main.callService" {
                     technology "function"
                     tags "Code"
                 }
@@ -193,20 +224,27 @@ workspace "archlette-demo" "Archlette demo application" {
                 }
 
                 # Code elements (classes, functions)
+                image_service__main__getjwtconfig = component "main.getJwtConfig" {
+                    description "Get or create JWT config (lazily initialized from environment)"
+                    technology "function"
+                    tags "Code"
+                }
+                image_service__main__authguard = component "main.authGuard" {
+                    technology "function"
+                    tags "Code"
+                }
             }
 
             # Container relationships
-            content_service -> gateway "Service binding: GATEWAY"
-            forms_service -> gateway "Service binding: GATEWAY"
             gateway -> content_service "Service binding: CONTENT_SERVICE"
             gateway -> image_service "Service binding: IMAGE_SERVICE"
             gateway -> forms_service "Service binding: FORMS_SERVICE"
-            image_service -> gateway "Service binding: GATEWAY"
         }
         # Actor interactions
         user -> flarelette_demo_ui__pages "Interacts with pages"
         content_service__main -> database "Uses Database for external system integration"
-        forms_service__main -> objectstorage "Uses ObjectStorage for external system integration"
+        forms_service__main -> database "Uses Database for external system integration"
+        image_service__main -> objectstorage "Uses ObjectStorage for external system integration"
         # Deployment environments
 
         deploymentEnvironment "production" {
@@ -465,7 +503,7 @@ branding {
 
 
         component forms_service "Components_forms_service" {
-            include objectstorage
+            include database
             include forms_service__main
             exclude "element.tag==Code"
             autoLayout
@@ -483,6 +521,7 @@ branding {
 
 
         component image_service "Components_image_service" {
+            include objectstorage
             include image_service__main
             exclude "element.tag==Code"
             autoLayout
@@ -507,11 +546,40 @@ branding {
         }
 
 
+        component content_service "Classes_content_service__main" {
+            include content_service__main__getjwtconfig
+            include content_service__main__authguard
+            autoLayout
+        }
+
+
+        component forms_service "Classes_forms_service__main" {
+            include forms_service__main__getjwtconfig
+            include forms_service__main__authguard
+            autoLayout
+        }
+
+
         component gateway "Classes_gateway__auth" {
+            include gateway__auth__getjwtconfig
             include gateway__auth__generateanonid
             include gateway__auth__mintanonymoustoken
             include gateway__auth__mintauthenticatedtoken
             include gateway__auth__getormintinternaltoken
+            autoLayout
+        }
+
+
+        component gateway "Classes_gateway__main" {
+            include gateway__main__getserviceurl
+            include gateway__main__callservice
+            autoLayout
+        }
+
+
+        component image_service "Classes_image_service__main" {
+            include image_service__main__getjwtconfig
+            include image_service__main__authguard
             autoLayout
         }
 

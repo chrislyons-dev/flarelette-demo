@@ -16,7 +16,7 @@ skinparam {
 
 hide stereotype
 
-skinparam rectangle<<ObjectStorage>> {
+skinparam rectangle<<Database>> {
   BackgroundColor #999999
   FontColor #ffffff
   BorderColor #6b6b6b
@@ -36,11 +36,11 @@ skinparam rectangle<<archlettedemo.formsservice>> {
   shadowing false
 }
 
-rectangle "==ObjectStorage\n<size:10>[Software System]</size>\n\nUses R2 object storage service for images." <<ObjectStorage>> as ObjectStorage
+rectangle "==Database\n<size:10>[Software System]</size>\n\nUses D1 database for news & events storage. | Uses D1 database service for form submissions." <<Database>> as Database
 
 rectangle "forms-service\n<size:10>[Container: Cloudflare Worker]</size>" <<archlettedemo.formsservice>> {
   rectangle "==main\n<size:10>[Component: module]</size>\n\nForms Service Handles form submissions (contact, tryouts, etc.) All endpoints require internal JWT verification." <<archlettedemo.formsservice.main>> as archlettedemo.formsservice.main
 }
 
-archlettedemo.formsservice.main -[#707070,thickness=2]-> ObjectStorage : "<color:#707070>Uses ObjectStorage for external system integration"
+archlettedemo.formsservice.main -[#707070,thickness=2]-> Database : "<color:#707070>Uses Database for external system integration"
 @enduml

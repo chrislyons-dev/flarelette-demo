@@ -6,6 +6,9 @@
   <img src="docs/images/flarelette-light-mode-512.png" alt="Flarelette Logo" width="256" />
 </p>
 
+[![CI](https://github.com/YOUR_USERNAME/flarelette-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/flarelette-demo/actions/workflows/ci.yml)
+[![Deploy](https://github.com/YOUR_USERNAME/flarelette-demo/actions/workflows/deploy.yml/badge.svg)](https://github.com/YOUR_USERNAME/flarelette-demo/actions/workflows/deploy.yml)
+
 ---
 
 ## Overview
@@ -269,21 +272,29 @@ zone_name = "yourdomain.com"
 
 ### GitHub Actions (Recommended)
 
-1. Add Cloudflare secrets to GitHub:
-   - `CLOUDFLARE_API_TOKEN`
-   - `CLOUDFLARE_ACCOUNT_ID`
+1. Generate a JWT secret:
 
-2. Push to main branch:
+   ```bash
+   node -e "console.log(require('crypto').randomBytes(64).toString('base64url'))"
+   ```
+
+2. Add secrets to GitHub repository settings:
+   - `CLOUDFLARE_API_TOKEN` - Your Cloudflare API token with Workers and Pages permissions
+   - `CLOUDFLARE_ACCOUNT_ID` - Your Cloudflare account ID
+   - `JWT_SECRET` - The 64-byte base64url secret generated in step 1
+
+3. Push to main branch or manually trigger the workflow:
    ```bash
    git push origin main
    ```
 
 The workflow will:
 
-- Generate ephemeral Ed25519 keypair
-- Deploy all microservices
-- Inject secrets to gateway
-- Build and deploy Astro frontend to Pages
+- Run CI checks (lint, type-check, build, test)
+- Deploy all four microservices with JWT_SECRET
+- Build and deploy Astro frontend to Cloudflare Pages
+
+See [.github/workflows/README.md](.github/workflows/README.md) for detailed workflow documentation.
 
 ### Manual Deployment
 
@@ -295,12 +306,22 @@ wrangler deploy
 cd ../content-service
 wrangler deploy
 
-# ... repeat for other services
+cd ../forms-service
+wrangler deploy
+
+cd ../image-service
+wrangler deploy
+
+# Set JWT_SECRET for all workers
+echo "your-64-byte-secret" | wrangler secret put JWT_SECRET --name gateway
+echo "your-64-byte-secret" | wrangler secret put JWT_SECRET --name content-service
+echo "your-64-byte-secret" | wrangler secret put JWT_SECRET --name forms-service
+echo "your-64-byte-secret" | wrangler secret put JWT_SECRET --name image-service
 
 # Deploy UI
 cd ../../ui
 pnpm build
-wrangler pages deploy ./dist --project-name=flarelette-demo
+wrangler pages deploy ./dist --project-name=flarelette-demo-ui
 ```
 
 ---

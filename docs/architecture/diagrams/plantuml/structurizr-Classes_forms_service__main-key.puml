@@ -25,16 +25,5 @@ skinparam rectangle<<1>> {
 }
 rectangle "==Component" <<1>>
 
-skinparam rectangle<<2>> {
-  BackgroundColor #999999
-  FontColor #ffffff
-  BorderColor #6b6b6b
-  roundCorner 20
-}
-rectangle "==Software System, External" <<2>>
-
-rectangle "." <<_transparent>> as 3
-3 -[#707070,thickness=2]-> 3 : "<color:#707070>Relationship"
-
 
 @enduml

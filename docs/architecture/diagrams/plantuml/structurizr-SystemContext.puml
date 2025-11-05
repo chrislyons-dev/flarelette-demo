@@ -45,7 +45,7 @@ skinparam rectangle<<archlettedemo>> {
 }
 
 person "==User\n<size:10>[Person]</size>\n\nEnd user who interacts with the Flarelette Demo UI" <<User>> as User
-rectangle "==Database\n<size:10>[Software System]</size>\n\nUses D1 database for storage." <<Database>> as Database
+rectangle "==Database\n<size:10>[Software System]</size>\n\nUses D1 database for news & events storage. | Uses D1 database service for form submissions." <<Database>> as Database
 rectangle "==ObjectStorage\n<size:10>[Software System]</size>\n\nUses R2 object storage service for images." <<ObjectStorage>> as ObjectStorage
 rectangle "==archlette-demo\n<size:10>[Software System]</size>\n\nArchlette demo application" <<archlettedemo>> as archlettedemo
 

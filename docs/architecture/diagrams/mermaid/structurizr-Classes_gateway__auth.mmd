@@ -4,17 +4,19 @@ graph TB
   subgraph diagram ["archlette-demo - gateway - Components"]
     style diagram fill:#ffffff,stroke:#ffffff
 
-    subgraph 25 ["gateway"]
-      style 25 fill:#ffffff,stroke:#ac5b15,color:#ac5b15
+    subgraph 29 ["gateway"]
+      style 29 fill:#ffffff,stroke:#ac5b15,color:#ac5b15
 
-      30("<div style='font-weight: bold'>auth.generateAnonId</div><div style='font-size: 70%; margin-top: 0px'>[Component: function]</div><div style='font-size: 80%; margin-top:10px'>Generate a random anonymous<br />subject ID</div>")
-      style 30 fill:#85bbf0,stroke:#5d82a8,color:#000000
-      31("<div style='font-weight: bold'>auth.mintAnonymousToken</div><div style='font-size: 70%; margin-top: 0px'>[Component: function]</div><div style='font-size: 80%; margin-top:10px'>Mint an internal JWT for<br />anonymous requests</div>")
-      style 31 fill:#85bbf0,stroke:#5d82a8,color:#000000
-      32("<div style='font-weight: bold'>auth.mintAuthenticatedToken</div><div style='font-size: 70%; margin-top: 0px'>[Component: function]</div><div style='font-size: 80%; margin-top:10px'>Validate external Auth0 token<br />and mint internal token TODO:<br />Implement full Auth0 token<br />validation when Auth0 is<br />configured</div>")
-      style 32 fill:#85bbf0,stroke:#5d82a8,color:#000000
-      33("<div style='font-weight: bold'>auth.getOrMintInternalToken</div><div style='font-size: 70%; margin-top: 0px'>[Component: function]</div><div style='font-size: 80%; margin-top:10px'>Extract or mint internal<br />token for request</div>")
-      style 33 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      34("<div style='font-weight: bold'>auth.getJwtConfig</div><div style='font-size: 70%; margin-top: 0px'>[Component: function]</div><div style='font-size: 80%; margin-top:10px'>Get or create JWT config<br />(lazily initialized from<br />environment)</div>")
+      style 34 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      35("<div style='font-weight: bold'>auth.generateAnonId</div><div style='font-size: 70%; margin-top: 0px'>[Component: function]</div><div style='font-size: 80%; margin-top:10px'>Generate a random anonymous<br />subject ID</div>")
+      style 35 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      36("<div style='font-weight: bold'>auth.mintAnonymousToken</div><div style='font-size: 70%; margin-top: 0px'>[Component: function]</div><div style='font-size: 80%; margin-top:10px'>Mint an internal JWT for<br />anonymous requests</div>")
+      style 36 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      37("<div style='font-weight: bold'>auth.mintAuthenticatedToken</div><div style='font-size: 70%; margin-top: 0px'>[Component: function]</div><div style='font-size: 80%; margin-top:10px'>Validate external Auth0 token<br />and mint internal token TODO:<br />Implement full Auth0 token<br />validation when Auth0 is<br />configured</div>")
+      style 37 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      38("<div style='font-weight: bold'>auth.getOrMintInternalToken</div><div style='font-size: 70%; margin-top: 0px'>[Component: function]</div><div style='font-size: 80%; margin-top:10px'>Extract or mint internal<br />token for request</div>")
+      style 38 fill:#85bbf0,stroke:#5d82a8,color:#000000
     end
 
   end

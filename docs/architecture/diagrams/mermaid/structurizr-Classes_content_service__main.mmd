@@ -1,0 +1,16 @@
+graph TB
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["archlette-demo - content-service - Components"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    subgraph 19 ["content-service"]
+      style 19 fill:#ffffff,stroke:#ac5b15,color:#ac5b15
+
+      22("<div style='font-weight: bold'>main.getJwtConfig</div><div style='font-size: 70%; margin-top: 0px'>[Component: function]</div><div style='font-size: 80%; margin-top:10px'>Get or create JWT config<br />(lazily initialized from<br />environment)</div>")
+      style 22 fill:#85bbf0,stroke:#5d82a8,color:#000000
+      23("<div style='font-weight: bold'>main.authGuard</div><div style='font-size: 70%; margin-top: 0px'>[Component: function]</div>")
+      style 23 fill:#85bbf0,stroke:#5d82a8,color:#000000
+    end
+
+  end

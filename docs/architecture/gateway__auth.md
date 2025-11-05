@@ -38,9 +38,40 @@
 ### Code Elements
 
 <details>
-<summary><strong>4 code element(s)</strong></summary>
+<summary><strong>5 code element(s)</strong></summary>
 
 #### Functions
+
+##### `getJwtConfig()`
+
+Get or create JWT config (lazily initialized from environment)
+
+<table>
+<tbody>
+<tr>
+<td><strong>Type</strong></td>
+<td><code>function</code></td>
+</tr>
+<tr>
+<td><strong>Visibility</strong></td>
+<td><code>private</code></td>
+</tr>
+<tr>
+<td><strong>Returns</strong></td>
+<td><code>any</code></td>
+</tr>
+<tr>
+<td><strong>Location</strong></td>
+<td><code>C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts:15</code></td>
+</tr>
+</tbody>
+</table>
+
+**Parameters:**
+
+- `env`: <code>import("C:/Users/chris/git/flarelette-demo/workers/gateway/src/env").Env</code>
+
+---
 
 ##### `generateAnonId()`
 
@@ -62,7 +93,7 @@ Generate a random anonymous subject ID
 </tr>
 <tr>
 <td><strong>Location</strong></td>
-<td><code>C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts:12</code></td>
+<td><code>C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts:34</code></td>
 </tr>
 </tbody>
 </table>
@@ -93,7 +124,7 @@ Mint an internal JWT for anonymous requests
 </tr>
 <tr>
 <td><strong>Location</strong></td>
-<td><code>C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts:21</code></td>
+<td><code>C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts:43</code></td>
 </tr>
 </tbody>
 </table>
@@ -129,7 +160,7 @@ TODO: Implement full Auth0 token validation when Auth0 is configured
 </tr>
 <tr>
 <td><strong>Location</strong></td>
-<td><code>C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts:39</code></td>
+<td><code>C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts:59</code></td>
 </tr>
 </tbody>
 </table>
@@ -164,7 +195,7 @@ Extract or mint internal token for request
 </tr>
 <tr>
 <td><strong>Location</strong></td>
-<td><code>C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts:62</code></td>
+<td><code>C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts:82</code></td>
 </tr>
 </tbody>
 </table>

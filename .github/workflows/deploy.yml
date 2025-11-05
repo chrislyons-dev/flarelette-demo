@@ -1,128 +1,123 @@
-name: Deploy Flarelette Demo
+name: Deploy
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: "production"
+        type: choice
+        options:
+          - production
+          - staging
   push:
-    branches: [main]
+    branches:
+      - main
 
-env:
-  NODE_VERSION: '20'
-  PNPM_VERSION: '9'
+permissions:
+  contents: read
+  deployments: write
 
 jobs:
-  deploy:
+  deploy-workers:
+    name: Deploy Workers to Cloudflare
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+          node-version: "20"
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Type check
-        run: pnpm type-check
-
-      - name: Generate Ed25519 keypair (ephemeral)
-        id: keys
-        run: |
-          node -e "
-          const { generateKeyPairSync } = require('crypto');
-          const kid = 'v' + Date.now();
-
-          const { privateKey, publicKey } = generateKeyPairSync('ed25519', {
-            privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
-            publicKeyEncoding: { type: 'spki', format: 'der' }
-          });
-
-          // Extract raw x coordinate (last 32 bytes of SPKI DER)
-          const x = Buffer.from(publicKey.slice(-32)).toString('base64url');
-
-          const jwks = JSON.stringify({
-            keys: [{
-              kty: 'OKP',
-              crv: 'Ed25519',
-              alg: 'EdDSA',
-              use: 'sig',
-              kid: kid,
-              x: x
-            }]
-          });
-
-          // Output to GitHub Actions
-          const fs = require('fs');
-          fs.appendFileSync(process.env.GITHUB_OUTPUT, \`PRIVATE_PEM<<EOF\n\${privateKey}\nEOF\n\`);
-          fs.appendFileSync(process.env.GITHUB_OUTPUT, \`JWKS<<EOF\n\${jwks}\nEOF\n\`);
-          fs.appendFileSync(process.env.GITHUB_OUTPUT, \`KID=\${kid}\n\`);
-          "
-
-      - name: Deploy microservices
+      - name: Deploy Gateway
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: workers/gateway
+          command: deploy
+          secrets: |
+            JWT_SECRET
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          # Deploy content-service first (no secrets needed)
-          cd workers/content-service
-          pnpm wrangler deploy
-          cd ../..
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-          # Deploy image-service
-          cd workers/image-service
-          pnpm wrangler deploy
-          cd ../..
+      - name: Deploy Content Service
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: workers/content-service
+          command: deploy
+          secrets: |
+            JWT_SECRET
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-          # Deploy forms-service
-          cd workers/forms-service
-          pnpm wrangler deploy
-          cd ../..
+      - name: Deploy Forms Service
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: workers/forms-service
+          command: deploy
+          secrets: |
+            JWT_SECRET
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-          # Deploy gateway with secrets
-          cd workers/gateway
-          echo "${{ steps.keys.outputs.PRIVATE_PEM }}" | pnpm wrangler secret put ED25519_PRIVATE_PEM
-          echo "${{ steps.keys.outputs.JWKS }}" > jwks.json
-          pnpm wrangler deploy --var JWKS_KID="${{ steps.keys.outputs.KID }}"
-          cd ../..
+      - name: Deploy Image Service
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: workers/image-service
+          command: deploy
+          secrets: |
+            JWT_SECRET
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-      - name: Build Astro frontend
-        run: |
-          cd ui
-          pnpm build
-          cd ..
+  deploy-ui:
+    name: Deploy UI to Cloudflare Pages
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build UI
+        run: pnpm --filter ui build
 
       - name: Deploy to Cloudflare Pages
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          cd ui
-          pnpm wrangler pages deploy ./dist --project-name=flarelette-demo
-          cd ..
-
-      - name: Configure API Shield
-        if: vars.CLOUDFLARE_ZONE_ID != ''
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
-        run: |
-          node scripts/configure-api-shield.js
-
-      - name: Verify deployment
-        run: |
-          # Wait for deployment to propagate
-          sleep 10
-
-          # Test gateway health (update URL when deployed)
-          # curl -sSf "https://yourdomain.com/api/health" || echo "Gateway not yet available"
-
-          echo "✅ Deployment complete!"
-          echo "Configure your custom domain in wrangler.toml and Cloudflare dashboard"
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ui/dist --project-name=flarelette-demo-ui

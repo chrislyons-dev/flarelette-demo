@@ -15,7 +15,7 @@
       "targets": ["flarelette_demo_ui__pages"]
     },
     {
-      "description": "Uses D1 database for storage.",
+      "description": "Uses D1 database for news & events storage. | Uses D1 database service for form submissions.",
       "tags": [],
       "id": "database",
       "name": "Database",
@@ -337,6 +337,108 @@
       "lineNumber": 1
     },
     {
+      "description": "Get or create JWT config (lazily initialized from environment)",
+      "id": "content_service__main__getjwtconfig",
+      "componentId": "content_service__main",
+      "name": "getJwtConfig",
+      "type": "function",
+      "documentation": {
+        "summary": "Get or create JWT config (lazily initialized from environment)"
+      },
+      "returnType": "any",
+      "parameters": [
+        {
+          "name": "env",
+          "type": "import(\"C:/Users/chris/git/flarelette-demo/workers/content-service/src/env\").Env",
+          "optional": false
+        }
+      ],
+      "visibility": "private",
+      "isAsync": false,
+      "filePath": "C:/Users/chris/git/flarelette-demo/workers/content-service/src/index.ts",
+      "lineNumber": 22
+    },
+    {
+      "id": "content_service__main__authguard",
+      "componentId": "content_service__main",
+      "name": "authGuard",
+      "type": "function",
+      "returnType": "(c: Context<{ Bindings: import(\"C:/Users/chris/git/flarelette-demo/workers/content-service/src/env\").Env; Variables: { auth: JwtPayload; }; }>, next: Next) => Promise<any>",
+      "parameters": [
+        {
+          "name": "policyObj",
+          "type": "Policy",
+          "optional": true
+        }
+      ],
+      "visibility": "private",
+      "isAsync": false,
+      "filePath": "C:/Users/chris/git/flarelette-demo/workers/content-service/src/index.ts",
+      "lineNumber": 38
+    },
+    {
+      "description": "Get or create JWT config (lazily initialized from environment)",
+      "id": "forms_service__main__getjwtconfig",
+      "componentId": "forms_service__main",
+      "name": "getJwtConfig",
+      "type": "function",
+      "documentation": {
+        "summary": "Get or create JWT config (lazily initialized from environment)"
+      },
+      "returnType": "any",
+      "parameters": [
+        {
+          "name": "env",
+          "type": "Env",
+          "optional": false
+        }
+      ],
+      "visibility": "private",
+      "isAsync": false,
+      "filePath": "C:/Users/chris/git/flarelette-demo/workers/forms-service/src/index.ts",
+      "lineNumber": 30
+    },
+    {
+      "id": "forms_service__main__authguard",
+      "componentId": "forms_service__main",
+      "name": "authGuard",
+      "type": "function",
+      "returnType": "(c: Context<{ Bindings: Env; Variables: { auth: JwtPayload; }; }>, next: Next) => Promise<any>",
+      "parameters": [
+        {
+          "name": "policyObj",
+          "type": "Policy",
+          "optional": true
+        }
+      ],
+      "visibility": "private",
+      "isAsync": false,
+      "filePath": "C:/Users/chris/git/flarelette-demo/workers/forms-service/src/index.ts",
+      "lineNumber": 46
+    },
+    {
+      "description": "Get or create JWT config (lazily initialized from environment)",
+      "id": "gateway__auth__getjwtconfig",
+      "componentId": "gateway__auth",
+      "name": "getJwtConfig",
+      "type": "function",
+      "documentation": {
+        "summary": "Get or create JWT config (lazily initialized from environment)"
+      },
+      "returnType": "any",
+      "parameters": [
+        {
+          "name": "env",
+          "type": "import(\"C:/Users/chris/git/flarelette-demo/workers/gateway/src/env\").Env",
+          "optional": false
+        }
+      ],
+      "visibility": "private",
+      "isAsync": false,
+      "filePath": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts",
+      "lineNumber": 15
+    },
+    {
       "description": "Generate a random anonymous subject ID",
       "id": "gateway__auth__generateanonid",
       "componentId": "gateway__auth",
@@ -350,7 +452,7 @@
       "visibility": "private",
       "isAsync": false,
       "filePath": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts",
-      "lineNumber": 12
+      "lineNumber": 34
     },
     {
       "description": "Mint an internal JWT for anonymous requests",
@@ -372,7 +474,7 @@
       "visibility": "public",
       "isAsync": true,
       "filePath": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts",
-      "lineNumber": 21
+      "lineNumber": 43
     },
     {
       "description": "Validate external Auth0 token and mint internal token\nTODO: Implement full Auth0 token validation when Auth0 is configured",
@@ -394,7 +496,7 @@
       "visibility": "public",
       "isAsync": true,
       "filePath": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts",
-      "lineNumber": 39
+      "lineNumber": 59
     },
     {
       "description": "Extract or mint internal token for request",
@@ -421,7 +523,103 @@
       "visibility": "public",
       "isAsync": true,
       "filePath": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts",
-      "lineNumber": 62
+      "lineNumber": 82
+    },
+    {
+      "id": "gateway__main__getserviceurl",
+      "componentId": "gateway__main",
+      "name": "getServiceUrl",
+      "type": "function",
+      "returnType": "string",
+      "parameters": [
+        {
+          "name": "env",
+          "type": "import(\"C:/Users/chris/git/flarelette-demo/workers/gateway/src/env\").Env",
+          "optional": false
+        },
+        {
+          "name": "serviceName",
+          "type": "\"content\" | \"forms\" | \"image\"",
+          "optional": false
+        }
+      ],
+      "visibility": "private",
+      "isAsync": false,
+      "filePath": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/index.ts",
+      "lineNumber": 26
+    },
+    {
+      "id": "gateway__main__callservice",
+      "componentId": "gateway__main",
+      "name": "callService",
+      "type": "function",
+      "returnType": "Promise<Response>",
+      "parameters": [
+        {
+          "name": "env",
+          "type": "import(\"C:/Users/chris/git/flarelette-demo/workers/gateway/src/env\").Env",
+          "optional": false
+        },
+        {
+          "name": "serviceName",
+          "type": "\"content\" | \"forms\" | \"image\"",
+          "optional": false
+        },
+        {
+          "name": "path",
+          "type": "string",
+          "optional": false
+        },
+        {
+          "name": "init",
+          "type": "RequestInit",
+          "optional": true
+        }
+      ],
+      "visibility": "private",
+      "isAsync": true,
+      "filePath": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/index.ts",
+      "lineNumber": 45
+    },
+    {
+      "description": "Get or create JWT config (lazily initialized from environment)",
+      "id": "image_service__main__getjwtconfig",
+      "componentId": "image_service__main",
+      "name": "getJwtConfig",
+      "type": "function",
+      "documentation": {
+        "summary": "Get or create JWT config (lazily initialized from environment)"
+      },
+      "returnType": "any",
+      "parameters": [
+        {
+          "name": "env",
+          "type": "Env",
+          "optional": false
+        }
+      ],
+      "visibility": "private",
+      "isAsync": false,
+      "filePath": "C:/Users/chris/git/flarelette-demo/workers/image-service/src/index.ts",
+      "lineNumber": 28
+    },
+    {
+      "id": "image_service__main__authguard",
+      "componentId": "image_service__main",
+      "name": "authGuard",
+      "type": "function",
+      "returnType": "(c: Context<{ Bindings: Env; Variables: { auth: JwtPayload; }; }>, next: Next) => Promise<any>",
+      "parameters": [
+        {
+          "name": "policyObj",
+          "type": "Policy",
+          "optional": true
+        }
+      ],
+      "visibility": "private",
+      "isAsync": false,
+      "filePath": "C:/Users/chris/git/flarelette-demo/workers/image-service/src/index.ts",
+      "lineNumber": 44
     }
   ],
   "deployments": [
@@ -447,11 +645,6 @@
           "type": "Cloudflare Worker",
           "bindings": [
             {
-              "type": "service",
-              "binding": "GATEWAY",
-              "service": "gateway"
-            },
-            {
               "type": "d1",
               "binding": "DB",
               "database": "content-db"
@@ -459,9 +652,7 @@
           ],
           "vars": {
             "JWT_ISS": "https://gateway.internal",
-            "JWT_AUD": "flarelette.mesh",
-            "JWKS_PATH": "/.well-known/jwks.json",
-            "JWKS_TTL_SECONDS": "600"
+            "JWT_AUD": "flarelette.mesh"
           }
         },
         {
@@ -471,11 +662,6 @@
           "type": "Cloudflare Worker",
           "bindings": [
             {
-              "type": "service",
-              "binding": "GATEWAY",
-              "service": "gateway"
-            },
-            {
               "type": "d1",
               "binding": "DB",
               "database": "forms-db"
@@ -483,9 +669,7 @@
           ],
           "vars": {
             "JWT_ISS": "https://gateway.internal",
-            "JWT_AUD": "flarelette.mesh",
-            "JWKS_PATH": "/.well-known/jwks.json",
-            "JWKS_TTL_SECONDS": "600"
+            "JWT_AUD": "flarelette.mesh"
           }
         },
         {
@@ -514,7 +698,6 @@
             "JWT_ISS": "https://gateway.internal",
             "JWT_AUD": "flarelette.mesh",
             "JWT_TTL_SECONDS": "900",
-            "JWKS_KID": "v1",
             "AUTH0_DOMAIN": "your-tenant.auth0.com",
             "AUTH0_AUDIENCE": "https://your-api.example.com"
           }
@@ -526,11 +709,6 @@
           "type": "Cloudflare Worker",
           "bindings": [
             {
-              "type": "service",
-              "binding": "GATEWAY",
-              "service": "gateway"
-            },
-            {
               "type": "r2",
               "binding": "IMAGES",
               "bucket": "images"
@@ -538,9 +716,7 @@
           ],
           "vars": {
             "JWT_ISS": "https://gateway.internal",
-            "JWT_AUD": "flarelette.mesh",
-            "JWKS_PATH": "/.well-known/jwks.json",
-            "JWKS_TTL_SECONDS": "600"
+            "JWT_AUD": "flarelette.mesh"
           }
         }
       ]
@@ -582,18 +758,6 @@
   ],
   "containerRelationships": [
     {
-      "description": "Service binding: GATEWAY",
-      "tags": ["service-binding"],
-      "source": "content_service",
-      "destination": "gateway"
-    },
-    {
-      "description": "Service binding: GATEWAY",
-      "tags": ["service-binding"],
-      "source": "forms_service",
-      "destination": "gateway"
-    },
-    {
       "description": "Service binding: CONTENT_SERVICE",
       "tags": ["service-binding"],
       "source": "gateway",
@@ -610,12 +774,6 @@
       "tags": ["service-binding"],
       "source": "gateway",
       "destination": "forms_service"
-    },
-    {
-      "description": "Service binding: GATEWAY",
-      "tags": ["service-binding"],
-      "source": "image_service",
-      "destination": "gateway"
     }
   ],
   "componentRelationships": [
@@ -650,16 +808,16 @@
       "destination": "database"
     },
     {
-      "description": "imports Hono",
+      "description": "Hono | Context | Next",
       "source": "content_service__main",
       "destination": "hono",
-      "stereotype": "import"
+      "stereotype": "import | type-import | type-import"
     },
     {
-      "description": "authGuard | policy | JwtPayload",
+      "description": "authGuardWithConfig | createHS512Config | policy | JwtPayload | Policy",
       "source": "content_service__main",
       "destination": "@chrislyons-dev/flarelette-hono",
-      "stereotype": "import"
+      "stereotype": "import | type-import | type-import"
     },
     {
       "description": "imports Env",
@@ -668,22 +826,22 @@
       "stereotype": "type-import"
     },
     {
-      "description": "Uses ObjectStorage for external system integration",
+      "description": "Uses Database for external system integration",
       "tags": [],
       "source": "forms_service__main",
-      "destination": "objectstorage"
+      "destination": "database"
     },
     {
-      "description": "imports Hono",
+      "description": "Hono | Context | Next",
       "source": "forms_service__main",
       "destination": "hono",
-      "stereotype": "import"
+      "stereotype": "import | type-import | type-import"
     },
     {
-      "description": "authGuard | policy | JwtPayload",
+      "description": "authGuardWithConfig | createHS512Config | policy | JwtPayload | Policy",
       "source": "forms_service__main",
       "destination": "@chrislyons-dev/flarelette-hono",
-      "stereotype": "import"
+      "stereotype": "import | type-import | type-import"
     },
     {
       "description": "imports zValidator",
@@ -698,7 +856,7 @@
       "stereotype": "import"
     },
     {
-      "description": "imports createToken",
+      "description": "signWithConfig | createHS512Config",
       "source": "gateway__auth",
       "destination": "@chrislyons-dev/flarelette-jwt",
       "stereotype": "import"
@@ -752,16 +910,22 @@
       "stereotype": "import"
     },
     {
-      "description": "imports Hono",
+      "description": "Uses ObjectStorage for external system integration",
+      "tags": [],
       "source": "image_service__main",
-      "destination": "hono",
-      "stereotype": "import"
+      "destination": "objectstorage"
     },
     {
-      "description": "authGuard | policy | JwtPayload",
+      "description": "Hono | Context | Next",
+      "source": "image_service__main",
+      "destination": "hono",
+      "stereotype": "import | type-import | type-import"
+    },
+    {
+      "description": "authGuardWithConfig | createHS512Config | policy | JwtPayload | Policy",
       "source": "image_service__main",
       "destination": "@chrislyons-dev/flarelette-hono",
-      "stereotype": "import"
+      "stereotype": "import | type-import | type-import"
     }
   ],
   "codeRelationships": [
@@ -784,9 +948,27 @@
       "stereotype": "import"
     },
     {
-      "description": "imports authGuard",
+      "description": "imports Context",
       "source": "C:/Users/chris/git/flarelette-demo/workers/content-service/src/index.ts",
-      "destination": "@chrislyons-dev/flarelette-hono:authGuard",
+      "destination": "hono:Context",
+      "stereotype": "type-import"
+    },
+    {
+      "description": "imports Next",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/content-service/src/index.ts",
+      "destination": "hono:Next",
+      "stereotype": "type-import"
+    },
+    {
+      "description": "imports authGuardWithConfig",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/content-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:authGuardWithConfig",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports createHS512Config",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/content-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:createHS512Config",
       "stereotype": "import"
     },
     {
@@ -799,7 +981,13 @@
       "description": "imports JwtPayload",
       "source": "C:/Users/chris/git/flarelette-demo/workers/content-service/src/index.ts",
       "destination": "@chrislyons-dev/flarelette-hono:JwtPayload",
-      "stereotype": "import"
+      "stereotype": "type-import"
+    },
+    {
+      "description": "imports Policy",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/content-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:Policy",
+      "stereotype": "type-import"
     },
     {
       "description": "imports Env",
@@ -814,9 +1002,27 @@
       "stereotype": "import"
     },
     {
-      "description": "imports authGuard",
+      "description": "imports Context",
       "source": "C:/Users/chris/git/flarelette-demo/workers/forms-service/src/index.ts",
-      "destination": "@chrislyons-dev/flarelette-hono:authGuard",
+      "destination": "hono:Context",
+      "stereotype": "type-import"
+    },
+    {
+      "description": "imports Next",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/forms-service/src/index.ts",
+      "destination": "hono:Next",
+      "stereotype": "type-import"
+    },
+    {
+      "description": "imports authGuardWithConfig",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/forms-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:authGuardWithConfig",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports createHS512Config",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/forms-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:createHS512Config",
       "stereotype": "import"
     },
     {
@@ -829,7 +1035,13 @@
       "description": "imports JwtPayload",
       "source": "C:/Users/chris/git/flarelette-demo/workers/forms-service/src/index.ts",
       "destination": "@chrislyons-dev/flarelette-hono:JwtPayload",
-      "stereotype": "import"
+      "stereotype": "type-import"
+    },
+    {
+      "description": "imports Policy",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/forms-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:Policy",
+      "stereotype": "type-import"
     },
     {
       "description": "imports zValidator",
@@ -844,9 +1056,15 @@
       "stereotype": "import"
     },
     {
-      "description": "imports createToken",
+      "description": "imports signWithConfig",
       "source": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts",
-      "destination": "@chrislyons-dev/flarelette-jwt:createToken",
+      "destination": "@chrislyons-dev/flarelette-jwt:signWithConfig",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports createHS512Config",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/gateway/src/auth.ts",
+      "destination": "@chrislyons-dev/flarelette-jwt:createHS512Config",
       "stereotype": "import"
     },
     {
@@ -922,9 +1140,27 @@
       "stereotype": "import"
     },
     {
-      "description": "imports authGuard",
+      "description": "imports Context",
       "source": "C:/Users/chris/git/flarelette-demo/workers/image-service/src/index.ts",
-      "destination": "@chrislyons-dev/flarelette-hono:authGuard",
+      "destination": "hono:Context",
+      "stereotype": "type-import"
+    },
+    {
+      "description": "imports Next",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/image-service/src/index.ts",
+      "destination": "hono:Next",
+      "stereotype": "type-import"
+    },
+    {
+      "description": "imports authGuardWithConfig",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/image-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:authGuardWithConfig",
+      "stereotype": "import"
+    },
+    {
+      "description": "imports createHS512Config",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/image-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:createHS512Config",
       "stereotype": "import"
     },
     {
@@ -937,22 +1173,16 @@
       "description": "imports JwtPayload",
       "source": "C:/Users/chris/git/flarelette-demo/workers/image-service/src/index.ts",
       "destination": "@chrislyons-dev/flarelette-hono:JwtPayload",
-      "stereotype": "import"
+      "stereotype": "type-import"
+    },
+    {
+      "description": "imports Policy",
+      "source": "C:/Users/chris/git/flarelette-demo/workers/image-service/src/index.ts",
+      "destination": "@chrislyons-dev/flarelette-hono:Policy",
+      "stereotype": "type-import"
     }
   ],
   "deploymentRelationships": [
-    {
-      "description": "Service binding: GATEWAY",
-      "tags": ["service-binding", "runtime"],
-      "source": "production__content_service",
-      "destination": "production__gateway"
-    },
-    {
-      "description": "Service binding: GATEWAY",
-      "tags": ["service-binding", "runtime"],
-      "source": "production__forms_service",
-      "destination": "production__gateway"
-    },
     {
       "description": "Service binding: CONTENT_SERVICE",
       "tags": ["service-binding", "runtime"],
@@ -970,12 +1200,6 @@
       "tags": ["service-binding", "runtime"],
       "source": "production__gateway",
       "destination": "production__forms_service"
-    },
-    {
-      "description": "Service binding: GATEWAY",
-      "tags": ["service-binding", "runtime"],
-      "source": "production__image_service",
-      "destination": "production__gateway"
     }
   ]
 }

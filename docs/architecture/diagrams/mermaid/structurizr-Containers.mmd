@@ -6,7 +6,7 @@ graph TB
 
     1["<div style='font-weight: bold'>User</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>End user who interacts with<br />the Flarelette Demo UI</div>"]
     style 1 fill:#08427b,stroke:#052e56,color:#ffffff
-    2("<div style='font-weight: bold'>Database</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Uses D1 database for storage.</div>")
+    2("<div style='font-weight: bold'>Database</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Uses D1 database for news &<br />events storage. | Uses D1<br />database service for form<br />submissions.</div>")
     style 2 fill:#999999,stroke:#6b6b6b,color:#ffffff
     3("<div style='font-weight: bold'>ObjectStorage</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Uses R2 object storage<br />service for images.</div>")
     style 3 fill:#999999,stroke:#6b6b6b,color:#ffffff
@@ -16,23 +16,21 @@ graph TB
 
       19("<div style='font-weight: bold'>content-service</div><div style='font-size: 70%; margin-top: 0px'>[Container: Cloudflare Worker]</div><div style='font-size: 80%; margin-top:10px'>Cloudflare Worker:<br />content-service | Content<br />management service - news,<br />events, pages (D1-backed)</div>")
       style 19 fill:#f6821f,stroke:#ac5b15,color:#ffffff
-      23("<div style='font-weight: bold'>forms-service</div><div style='font-size: 70%; margin-top: 0px'>[Container: Cloudflare Worker]</div><div style='font-size: 80%; margin-top:10px'>Cloudflare Worker:<br />forms-service | Form<br />submission service (contact,<br />tryouts, etc.)</div>")
-      style 23 fill:#f6821f,stroke:#ac5b15,color:#ffffff
-      25("<div style='font-weight: bold'>gateway</div><div style='font-size: 70%; margin-top: 0px'>[Container: Cloudflare Worker]</div><div style='font-size: 80%; margin-top:10px'>Cloudflare Worker: gateway |<br />Flarelette Gateway - EdDSA<br />signing and routing</div>")
+      25("<div style='font-weight: bold'>forms-service</div><div style='font-size: 70%; margin-top: 0px'>[Container: Cloudflare Worker]</div><div style='font-size: 80%; margin-top:10px'>Cloudflare Worker:<br />forms-service | Form<br />submission service (contact,<br />tryouts, etc.)</div>")
       style 25 fill:#f6821f,stroke:#ac5b15,color:#ffffff
-      36("<div style='font-weight: bold'>image-service</div><div style='font-size: 70%; margin-top: 0px'>[Container: Cloudflare Worker]</div><div style='font-size: 80%; margin-top:10px'>Cloudflare Worker:<br />image-service | Image<br />management service with R2<br />storage</div>")
-      style 36 fill:#f6821f,stroke:#ac5b15,color:#ffffff
+      29("<div style='font-weight: bold'>gateway</div><div style='font-size: 70%; margin-top: 0px'>[Container: Cloudflare Worker]</div><div style='font-size: 80%; margin-top:10px'>Cloudflare Worker: gateway |<br />Flarelette Gateway - EdDSA<br />signing and routing</div>")
+      style 29 fill:#f6821f,stroke:#ac5b15,color:#ffffff
+      43("<div style='font-weight: bold'>image-service</div><div style='font-size: 70%; margin-top: 0px'>[Container: Cloudflare Worker]</div><div style='font-size: 80%; margin-top:10px'>Cloudflare Worker:<br />image-service | Image<br />management service with R2<br />storage</div>")
+      style 43 fill:#f6821f,stroke:#ac5b15,color:#ffffff
       5("<div style='font-weight: bold'>flarelette-demo-ui</div><div style='font-size: 70%; margin-top: 0px'>[Container: Cloudflare Worker]</div><div style='font-size: 80%; margin-top:10px'>Cloudflare Worker:<br />flarelette-demo-ui | Astro<br />frontend for Flarelette demo</div>")
       style 5 fill:#f6821f,stroke:#ac5b15,color:#ffffff
     end
 
-    19-- "<div>Service binding: GATEWAY</div><div style='font-size: 70%'></div>" -->25
-    23-- "<div>Service binding: GATEWAY</div><div style='font-size: 70%'></div>" -->25
-    25-- "<div>Service binding:<br />CONTENT_SERVICE</div><div style='font-size: 70%'></div>" -->19
-    25-- "<div>Service binding:<br />IMAGE_SERVICE</div><div style='font-size: 70%'></div>" -->36
-    25-- "<div>Service binding:<br />FORMS_SERVICE</div><div style='font-size: 70%'></div>" -->23
-    36-- "<div>Service binding: GATEWAY</div><div style='font-size: 70%'></div>" -->25
+    29-- "<div>Service binding:<br />CONTENT_SERVICE</div><div style='font-size: 70%'></div>" -->19
+    29-- "<div>Service binding:<br />IMAGE_SERVICE</div><div style='font-size: 70%'></div>" -->43
+    29-- "<div>Service binding:<br />FORMS_SERVICE</div><div style='font-size: 70%'></div>" -->25
     1-- "<div>Interacts with pages</div><div style='font-size: 70%'></div>" -->5
     19-- "<div>Uses Database for external<br />system integration</div><div style='font-size: 70%'></div>" -->2
-    23-- "<div>Uses ObjectStorage for<br />external system integration</div><div style='font-size: 70%'></div>" -->3
+    25-- "<div>Uses Database for external<br />system integration</div><div style='font-size: 70%'></div>" -->2
+    43-- "<div>Uses ObjectStorage for<br />external system integration</div><div style='font-size: 70%'></div>" -->3
   end

@@ -1,0 +1,44 @@
+@startuml
+set separator none
+title archlette-demo - content-service - Components
+
+top to bottom direction
+skinparam ranksep 60
+skinparam nodesep 30
+
+skinparam {
+  arrowFontSize 10
+  defaultTextAlignment center
+  wrapWidth 200
+  maxMessageSize 100
+  defaultFontName "Arial"
+}
+
+hide stereotype
+
+skinparam rectangle<<archlettedemo.contentservice.mainauthGuard>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.contentservice.maingetJwtConfig>> {
+  BackgroundColor #85bbf0
+  FontColor #000000
+  BorderColor #5d82a8
+  roundCorner 20
+  shadowing false
+}
+skinparam rectangle<<archlettedemo.contentservice>> {
+  BorderColor #ac5b15
+  FontColor #ac5b15
+  shadowing false
+}
+
+rectangle "content-service\n<size:10>[Container: Cloudflare Worker]</size>" <<archlettedemo.contentservice>> {
+  rectangle "==main.getJwtConfig\n<size:10>[Component: function]</size>\n\nGet or create JWT config (lazily initialized from environment)" <<archlettedemo.contentservice.maingetJwtConfig>> as archlettedemo.contentservice.maingetJwtConfig
+  rectangle "==main.authGuard\n<size:10>[Component: function]</size>" <<archlettedemo.contentservice.mainauthGuard>> as archlettedemo.contentservice.mainauthGuard
+}
+
+@enduml

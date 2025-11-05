@@ -4,11 +4,15 @@ graph TB
   subgraph diagram ["archlette-demo - image-service - Components"]
     style diagram fill:#ffffff,stroke:#ffffff
 
-    subgraph 36 ["image-service"]
-      style 36 fill:#ffffff,stroke:#ac5b15,color:#ac5b15
+    3("<div style='font-weight: bold'>ObjectStorage</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Uses R2 object storage<br />service for images.</div>")
+    style 3 fill:#999999,stroke:#6b6b6b,color:#ffffff
 
-      37("<div style='font-weight: bold'>main</div><div style='font-size: 70%; margin-top: 0px'>[Component: module]</div><div style='font-size: 80%; margin-top:10px'>Image Service Manages image<br />uploads and galleries using<br />R2 storage. All endpoints<br />require internal JWT<br />verification.</div>")
-      style 37 fill:#85bbf0,stroke:#5d82a8,color:#000000
+    subgraph 43 ["image-service"]
+      style 43 fill:#ffffff,stroke:#ac5b15,color:#ac5b15
+
+      44("<div style='font-weight: bold'>main</div><div style='font-size: 70%; margin-top: 0px'>[Component: module]</div><div style='font-size: 80%; margin-top:10px'>Image Service Manages image<br />uploads and galleries using<br />R2 storage. All endpoints<br />require internal JWT<br />verification.</div>")
+      style 44 fill:#85bbf0,stroke:#5d82a8,color:#000000
     end
 
+    44-- "<div>Uses ObjectStorage for<br />external system integration</div><div style='font-size: 70%'></div>" -->3
   end

@@ -78,7 +78,7 @@ skinparam rectangle<<archlettedemo>> {
 }
 
 person "==User\n<size:10>[Person]</size>\n\nEnd user who interacts with the Flarelette Demo UI" <<User>> as User
-rectangle "==Database\n<size:10>[Software System]</size>\n\nUses D1 database for storage." <<Database>> as Database
+rectangle "==Database\n<size:10>[Software System]</size>\n\nUses D1 database for news & events storage. | Uses D1 database service for form submissions." <<Database>> as Database
 rectangle "==ObjectStorage\n<size:10>[Software System]</size>\n\nUses R2 object storage service for images." <<ObjectStorage>> as ObjectStorage
 
 rectangle "archlette-demo\n<size:10>[Software System]</size>" <<archlettedemo>> {
@@ -89,13 +89,11 @@ rectangle "archlette-demo\n<size:10>[Software System]</size>" <<archlettedemo>> 
   rectangle "==flarelette-demo-ui\n<size:10>[Container: Cloudflare Worker]</size>\n\nCloudflare Worker: flarelette-demo-ui | Astro frontend for Flarelette demo" <<archlettedemo.flarelettedemoui>> as archlettedemo.flarelettedemoui
 }
 
-archlettedemo.contentservice -[#707070,thickness=2]-> archlettedemo.gateway : "<color:#707070>Service binding: GATEWAY"
-archlettedemo.formsservice -[#707070,thickness=2]-> archlettedemo.gateway : "<color:#707070>Service binding: GATEWAY"
 archlettedemo.gateway -[#707070,thickness=2]-> archlettedemo.contentservice : "<color:#707070>Service binding: CONTENT_SERVICE"
 archlettedemo.gateway -[#707070,thickness=2]-> archlettedemo.imageservice : "<color:#707070>Service binding: IMAGE_SERVICE"
 archlettedemo.gateway -[#707070,thickness=2]-> archlettedemo.formsservice : "<color:#707070>Service binding: FORMS_SERVICE"
-archlettedemo.imageservice -[#707070,thickness=2]-> archlettedemo.gateway : "<color:#707070>Service binding: GATEWAY"
 User -[#707070,thickness=2]-> archlettedemo.flarelettedemoui : "<color:#707070>Interacts with pages"
 archlettedemo.contentservice -[#707070,thickness=2]-> Database : "<color:#707070>Uses Database for external system integration"
-archlettedemo.formsservice -[#707070,thickness=2]-> ObjectStorage : "<color:#707070>Uses ObjectStorage for external system integration"
+archlettedemo.formsservice -[#707070,thickness=2]-> Database : "<color:#707070>Uses Database for external system integration"
+archlettedemo.imageservice -[#707070,thickness=2]-> ObjectStorage : "<color:#707070>Uses ObjectStorage for external system integration"
 @enduml

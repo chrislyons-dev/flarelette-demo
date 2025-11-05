@@ -16,6 +16,13 @@ skinparam {
 
 hide stereotype
 
+skinparam rectangle<<ObjectStorage>> {
+  BackgroundColor #999999
+  FontColor #ffffff
+  BorderColor #6b6b6b
+  roundCorner 20
+  shadowing false
+}
 skinparam rectangle<<archlettedemo.imageservice.main>> {
   BackgroundColor #85bbf0
   FontColor #000000
@@ -29,8 +36,11 @@ skinparam rectangle<<archlettedemo.imageservice>> {
   shadowing false
 }
 
+rectangle "==ObjectStorage\n<size:10>[Software System]</size>\n\nUses R2 object storage service for images." <<ObjectStorage>> as ObjectStorage
+
 rectangle "image-service\n<size:10>[Container: Cloudflare Worker]</size>" <<archlettedemo.imageservice>> {
   rectangle "==main\n<size:10>[Component: module]</size>\n\nImage Service Manages image uploads and galleries using R2 storage. All endpoints require internal JWT verification." <<archlettedemo.imageservice.main>> as archlettedemo.imageservice.main
 }
 
+archlettedemo.imageservice.main -[#707070,thickness=2]-> ObjectStorage : "<color:#707070>Uses ObjectStorage for external system integration"
 @enduml
