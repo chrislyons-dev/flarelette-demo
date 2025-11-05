@@ -54,12 +54,12 @@ Go Roughriders!',
   );
 
 -- Sample roster (cheerleaders example)
-INSERT INTO roster (id, name, role, grade, bio, sort_order) VALUES
-  ('roster-001', 'Sarah Chen', 'Captain', '12', 'Senior captain with 4 years on varsity. Specializes in tumbling and choreography.', 1),
-  ('roster-002', 'Marcus Johnson', 'Co-Captain', '12', 'Co-captain and base for pyramid formations. Three-year varsity member.', 2),
-  ('roster-003', 'Emma Rodriguez', 'Flyer', '11', 'Junior flyer known for flexibility and precision in aerial stunts.', 3),
-  ('roster-004', 'Tyler Kim', 'Base', '10', 'Sophomore base with exceptional strength and reliability.', 4),
-  ('roster-005', 'Aisha Patel', 'Tumbler', '11', 'Junior tumbler with competitive gymnastics background.', 5);
+INSERT INTO roster (id, name, role, grade, bio, photo_url, sort_order) VALUES
+  ('roster-001', 'Sarah Chen', 'Captain', '12', 'Senior captain with 4 years on varsity. Specializes in tumbling and choreography.', '/api/images/cheer-sarah.jpg', 1),
+  ('roster-002', 'Marcus Johnson', 'Co-Captain', '12', 'Co-captain and base for pyramid formations. Three-year varsity member.', '/api/images/cheer-marcus.jpg', 2),
+  ('roster-003', 'Emma Rodriguez', 'Flyer', '11', 'Junior flyer known for flexibility and precision in aerial stunts.', '/api/images/cheer-emma.jpg', 3),
+  ('roster-004', 'Tyler Kim', 'Base', '10', 'Sophomore base with exceptional strength and reliability.', '/api/images/cheer-tyler.jpg', 4),
+  ('roster-005', 'Aisha Patel', 'Tumbler', '11', 'Junior tumbler with competitive gymnastics background.', '/api/images/cheer-aisha.jpg', 5);
 
 -- Sample pages
 INSERT INTO pages (id, slug, title, content) VALUES

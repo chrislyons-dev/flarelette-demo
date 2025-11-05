@@ -142,7 +142,7 @@ CLAUDE.md
 .claude/
 
 # Notes directory (keep for reference, but ignore local edits)
-notes/*.local.md
+notes/
 
 # Cloudflare Workers specific
 .wrangler/

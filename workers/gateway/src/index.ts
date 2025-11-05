@@ -214,6 +214,23 @@ app.get('/api/images', zValidator('query', paginationSchema), async (c) => {
   })
 })
 
+// GET /api/images/:key - Get single image
+app.get('/api/images/:key', async (c) => {
+  const key = c.req.param('key')
+  const internalToken = await getOrMintInternalToken(c.req.raw, c.env)
+
+  const response = await callService(c.env, 'image', `/images/${key}`, {
+    headers: {
+      Authorization: `Bearer ${internalToken}`,
+    },
+  })
+
+  return new Response(response.body, {
+    status: response.status,
+    headers: response.headers,
+  })
+})
+
 /**
  * Catch-all 404
  */

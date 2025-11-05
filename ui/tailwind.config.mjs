@@ -4,21 +4,39 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
-          950: '#082f49',
+        // Flarelette Brand Colors
+        navy: {
+          DEFAULT: '#0F2B45',
+          dark: '#0B0F12',
+          light: '#1a3d5f',
         },
+        orange: {
+          DEFAULT: '#FF7A00',
+          light: '#ff9433',
+          dark: '#cc6200',
+        },
+        teal: {
+          DEFAULT: '#00C2A8',
+          light: '#33d1bb',
+          dark: '#009b86',
+        },
+        flame: {
+          red: '#E74C3C',
+          orange: '#F39C12',
+          yellow: '#F1C40F',
+        },
+        neutral: {
+          light: '#F8FAFC',
+          DEFAULT: '#94A3B8',
+          dark: '#0B0F12',
+        },
+      },
+      fontFamily: {
+        sans: ['Inter', 'IBM Plex Sans', 'system-ui', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
       },
     },
   },
   plugins: [],
+  darkMode: 'class',
 }
