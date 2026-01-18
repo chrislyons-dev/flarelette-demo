@@ -1,14 +1,22 @@
 ---
+import '../styles/global.css'
+import { siteConfig, type Theme } from '../config/site'
+
 interface Props {
   title: string
   description?: string
+  theme?: Theme
 }
 
-const { title, description = 'Flarelette microservices demo' } = Astro.props
+const { title, description = siteConfig.description, theme } = Astro.props
+
+// Theme priority: 1) page prop override, 2) site config
+const activeTheme = theme || siteConfig.theme
+const themeClass = activeTheme !== 'flarelette' ? `theme-${activeTheme}` : ''
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class={themeClass}>
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
@@ -24,29 +32,29 @@ const { title, description = 'Flarelette microservices demo' } = Astro.props
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <title>{title}</title>
   </head>
-  <body class="min-h-screen bg-neutral-light font-sans">
-    <nav class="bg-navy border-b border-navy-light">
+  <body class="min-h-screen bg-surface font-sans">
+    <nav class="bg-surface-brand border-b border-border-brand">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <div class="flex">
             <a href="/" class="flex items-center space-x-3">
-              <img src="/flarelette-dark-mode-128.png" alt="Flarelette" class="h-8 w-8" />
-              <span class="text-xl font-semibold text-white">Flarelette Demo</span>
+              <img src={siteConfig.logo.dark} alt={siteConfig.name} class="h-8 w-8" />
+              <span class="text-xl font-semibold text-on-brand">{siteConfig.name}</span>
             </a>
             <div class="ml-10 flex items-center space-x-1">
-              <a href="/" class="text-neutral-light hover:text-white px-3 py-2 rounded-md text-sm font-semibold transition-colors">
+              <a href="/" class="text-on-brand-muted hover:text-on-brand px-3 py-2 rounded-md text-sm font-semibold transition-colors">
                 Home
               </a>
-              <a href="/events" class="text-neutral-light hover:text-white px-3 py-2 rounded-md text-sm font-semibold transition-colors">
+              <a href="/events" class="text-on-brand-muted hover:text-on-brand px-3 py-2 rounded-md text-sm font-semibold transition-colors">
                 Events
               </a>
-              <a href="/news" class="text-neutral-light hover:text-white px-3 py-2 rounded-md text-sm font-semibold transition-colors">
+              <a href="/news" class="text-on-brand-muted hover:text-on-brand px-3 py-2 rounded-md text-sm font-semibold transition-colors">
                 News
               </a>
-              <a href="/roster" class="text-neutral-light hover:text-white px-3 py-2 rounded-md text-sm font-semibold transition-colors">
+              <a href="/roster" class="text-on-brand-muted hover:text-on-brand px-3 py-2 rounded-md text-sm font-semibold transition-colors">
                 Roster
               </a>
-              <a href="/contact" class="text-neutral-light hover:text-white px-3 py-2 rounded-md text-sm font-semibold transition-colors">
+              <a href="/contact" class="text-on-brand-muted hover:text-on-brand px-3 py-2 rounded-md text-sm font-semibold transition-colors">
                 Contact
               </a>
             </div>
@@ -59,13 +67,13 @@ const { title, description = 'Flarelette microservices demo' } = Astro.props
       <slot />
     </main>
 
-    <footer class="bg-navy mt-16 border-t border-navy-light">
+    <footer class="bg-surface-brand mt-16 border-t border-border-brand">
       <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-center space-x-3">
-          <img src="/flarelette-dark-mode-128.png" alt="Flarelette" class="h-6 w-6 opacity-75" />
-          <p class="text-center text-neutral-light text-sm">
-            Built with <a href="https://github.com/chrislyons-dev/flarelette-hono" class="text-teal hover:text-teal-light font-semibold transition-colors">flarelette-hono</a> &middot;
-            Secure JWTs at the edge
+          <img src={siteConfig.logo.dark} alt={siteConfig.name} class="h-6 w-6 opacity-75" />
+          <p class="text-center text-on-brand-muted text-sm">
+            Built with <a href={siteConfig.links.github} class="text-primary hover:text-primary-hover font-semibold transition-colors">flarelette-hono</a> &middot;
+            {siteConfig.tagline}
           </p>
         </div>
       </div>

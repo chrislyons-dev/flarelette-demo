@@ -10,19 +10,19 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 ---
 
 <BaseLayout title="Welcome to Flarelette Demo">
-  <div class="bg-gradient-to-br from-navy to-navy-light relative overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-r from-flame-red via-flame-orange to-flame-yellow opacity-5"></div>
+  <div class="bg-gradient-to-br from-surface-brand to-surface-brand-light relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-gradient-start via-gradient-mid to-gradient-end opacity-5"></div>
     <div class="max-w-7xl mx-auto py-20 px-4 sm:px-6 lg:px-8 relative">
       <div class="flex items-center space-x-4 mb-6">
         <img src="/flarelette-dark-mode-256.png" alt="Flarelette" class="h-16 w-16" />
-        <h1 class="text-5xl font-bold text-white">
+        <h1 class="text-5xl font-bold text-on-brand">
           Flarelette
         </h1>
       </div>
-      <p class="text-2xl text-white max-w-3xl mb-4 font-semibold">
+      <p class="text-2xl text-on-brand max-w-3xl mb-4 font-semibold">
         Secure JWTs at the edge
       </p>
-      <p class="text-lg text-gray-200 max-w-3xl">
+      <p class="text-lg text-on-brand-muted max-w-3xl">
         Production-ready template for building Cloudflare Workers applications with JWT authentication,
         D1 databases, R2 storage, and Astro frontend — all on the free tier.
       </p>
@@ -31,38 +31,38 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 
   <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-      <div class="bg-white p-6 rounded-lg shadow-sm border-t-4 border-orange">
-        <h2 class="text-2xl font-bold mb-3 text-navy">Zero Trust Security</h2>
-        <p class="text-gray-700 leading-relaxed">
+      <div class="bg-surface-elevated p-6 rounded-lg shadow-sm border-t-4 border-accent-1">
+        <h2 class="text-2xl font-bold mb-3 text-on-surface">Zero Trust Security</h2>
+        <p class="text-on-surface-muted leading-relaxed">
           All API requests authenticated with HS512-signed internal JWTs. Gateway mints short-lived tokens
           for every request, verified by each microservice.
         </p>
       </div>
 
-      <div class="bg-white p-6 rounded-lg shadow-sm border-t-4 border-teal">
-        <h2 class="text-2xl font-bold mb-3 text-navy">Free Tier Friendly</h2>
-        <p class="text-gray-700 leading-relaxed">
+      <div class="bg-surface-elevated p-6 rounded-lg shadow-sm border-t-4 border-accent-2">
+        <h2 class="text-2xl font-bold mb-3 text-on-surface">Free Tier Friendly</h2>
+        <p class="text-on-surface-muted leading-relaxed">
           Built to run entirely on Cloudflare's generous free tier: Workers, Pages, D1, and R2.
           Perfect for school sites, small businesses, and side projects.
         </p>
       </div>
 
-      <div class="bg-white p-6 rounded-lg shadow-sm border-t-4 border-navy">
-        <h2 class="text-2xl font-bold mb-3 text-navy">Production Ready</h2>
-        <p class="text-gray-700 leading-relaxed">
+      <div class="bg-surface-elevated p-6 rounded-lg shadow-sm border-t-4 border-accent-3">
+        <h2 class="text-2xl font-bold mb-3 text-on-surface">Production Ready</h2>
+        <p class="text-on-surface-muted leading-relaxed">
           Input validation with Zod, OpenAPI specs, structured logging, and GitHub Actions deployment.
           Clone and customize for your next project.
         </p>
       </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow-sm p-8 border border-gray-200">
-      <h2 class="text-3xl font-bold mb-6 text-navy">Features</h2>
+    <div class="bg-surface-elevated rounded-lg shadow-sm p-8 border border-border">
+      <h2 class="text-3xl font-bold mb-6 text-on-surface">Features</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <h3 class="text-lg font-semibold mb-2 text-teal">Gateway</h3>
-          <ul class="list-disc list-inside text-gray-700 space-y-1 leading-relaxed">
+          <h3 class="text-lg font-semibold mb-2 text-primary">Gateway</h3>
+          <ul class="list-disc list-inside text-on-surface-muted space-y-1 leading-relaxed">
             <li>HS512 JWT signing with shared secrets</li>
             <li>Input validation with Zod</li>
             <li>OpenAPI 3.1 specification</li>
@@ -71,8 +71,8 @@ import BaseLayout from '../layouts/BaseLayout.astro'
         </div>
 
         <div>
-          <h3 class="text-lg font-semibold mb-2 text-teal">Content Service</h3>
-          <ul class="list-disc list-inside text-gray-700 space-y-1 leading-relaxed">
+          <h3 class="text-lg font-semibold mb-2 text-primary">Content Service</h3>
+          <ul class="list-disc list-inside text-on-surface-muted space-y-1 leading-relaxed">
             <li>D1-backed CMS (SQLite)</li>
             <li>News, events, roster, pages</li>
             <li>Sample data included</li>
@@ -81,8 +81,8 @@ import BaseLayout from '../layouts/BaseLayout.astro'
         </div>
 
         <div>
-          <h3 class="text-lg font-semibold mb-2 text-teal">Image Service</h3>
-          <ul class="list-disc list-inside text-gray-700 space-y-1 leading-relaxed">
+          <h3 class="text-lg font-semibold mb-2 text-primary">Image Service</h3>
+          <ul class="list-disc list-inside text-on-surface-muted space-y-1 leading-relaxed">
             <li>R2 storage integration</li>
             <li>Photo galleries</li>
             <li>CDN-optimized delivery</li>
@@ -91,8 +91,8 @@ import BaseLayout from '../layouts/BaseLayout.astro'
         </div>
 
         <div>
-          <h3 class="text-lg font-semibold mb-2 text-teal">Forms Service</h3>
-          <ul class="list-disc list-inside text-gray-700 space-y-1 leading-relaxed">
+          <h3 class="text-lg font-semibold mb-2 text-primary">Forms Service</h3>
+          <ul class="list-disc list-inside text-on-surface-muted space-y-1 leading-relaxed">
             <li>Contact form submissions</li>
             <li>D1 storage with metadata</li>
             <li>Rate limiting ready</li>
@@ -102,15 +102,15 @@ import BaseLayout from '../layouts/BaseLayout.astro'
       </div>
     </div>
 
-    <div class="mt-12 bg-navy rounded-lg p-8 text-white">
-      <h2 class="text-2xl font-bold mb-4">Getting Started</h2>
+    <div class="mt-12 bg-surface-brand rounded-lg p-8">
+      <h2 class="text-2xl font-bold mb-4 text-on-brand">Getting Started</h2>
       <div class="prose prose-invert max-w-none">
-        <ol class="text-neutral-light space-y-2 text-base leading-relaxed">
+        <ol class="text-on-brand-muted space-y-2 text-base leading-relaxed">
           <li>Clone this repository</li>
-          <li>Run <code class="bg-navy-light px-2 py-1 rounded text-sm font-mono text-teal">pnpm install</code></li>
-          <li>Run <code class="bg-navy-light px-2 py-1 rounded text-sm font-mono text-teal">pnpm run setup</code> to initialize databases</li>
-          <li>Run <code class="bg-navy-light px-2 py-1 rounded text-sm font-mono text-teal">pnpm dev</code> to start all services</li>
-          <li>Visit <a href="/events" class="text-teal hover:text-teal-light font-semibold transition-colors">Events</a>, <a href="/news" class="text-teal hover:text-teal-light font-semibold transition-colors">News</a>, and <a href="/contact" class="text-teal hover:text-teal-light font-semibold transition-colors">Contact</a> to see it in action</li>
+          <li>Run <code class="bg-code-bg px-2 py-1 rounded text-sm font-mono text-code-text">pnpm install</code></li>
+          <li>Run <code class="bg-code-bg px-2 py-1 rounded text-sm font-mono text-code-text">pnpm run setup</code> to initialize databases</li>
+          <li>Run <code class="bg-code-bg px-2 py-1 rounded text-sm font-mono text-code-text">pnpm dev</code> to start all services</li>
+          <li>Visit <a href="/events" class="text-primary hover:text-primary-hover font-semibold transition-colors">Events</a>, <a href="/news" class="text-primary hover:text-primary-hover font-semibold transition-colors">News</a>, and <a href="/contact" class="text-primary hover:text-primary-hover font-semibold transition-colors">Contact</a> to see it in action</li>
         </ol>
       </div>
     </div>

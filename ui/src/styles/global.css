@@ -1,0 +1,43 @@
+/**
+ * Global Styles
+ * Imports Tailwind and theme system
+ */
+
+/* Theme imports must come first */
+@import './themes/flarelette.css';
+@import './themes/hawkeyes.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Semantic Theming System
+ *
+ * How it works:
+ * 1. Thematic colors define brand-specific palettes (flarelette.css, hawkeyes.css)
+ * 2. CSS variables map semantic names to thematic values
+ * 3. Tailwind config references CSS variables
+ * 4. Components use semantic class names (bg-surface, text-primary)
+ *
+ * To switch themes:
+ * - Add class="theme-hawkeyes" to <html> element
+ * - Or set via JavaScript: document.documentElement.classList.add('theme-hawkeyes')
+ *
+ * Available themes:
+ * - (default) flarelette - Navy, teal, orange
+ * - theme-hawkeyes - Black and gold
+ */
+
+@layer base {
+  /* Smooth color transitions when switching themes */
+  html {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Default body styling using semantic colors */
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+  }
+}

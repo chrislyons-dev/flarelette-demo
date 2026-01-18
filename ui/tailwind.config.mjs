@@ -4,31 +4,74 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Flarelette Brand Colors
-        navy: {
-          DEFAULT: '#0F2B45',
-          dark: '#0B0F12',
-          light: '#1a3d5f',
+        /**
+         * Semantic Colors (use these in components)
+         * These reference CSS variables defined in themes/*.css
+         * Changing the theme class on <html> swaps the entire palette
+         */
+
+        // Surface colors (backgrounds)
+        surface: {
+          DEFAULT: 'var(--color-surface)',
+          elevated: 'var(--color-surface-elevated)',
+          brand: 'var(--color-surface-brand)',
+          'brand-light': 'var(--color-surface-brand-light)',
+          'brand-dark': 'var(--color-surface-brand-dark)',
         },
-        orange: {
-          DEFAULT: '#FF7A00',
-          light: '#ff9433',
-          dark: '#cc6200',
+
+        // Text colors
+        'on-surface': {
+          DEFAULT: 'var(--color-on-surface)',
+          muted: 'var(--color-on-surface-muted)',
+          faint: 'var(--color-on-surface-faint)',
         },
-        teal: {
-          DEFAULT: '#00C2A8',
-          light: '#33d1bb',
-          dark: '#009b86',
+        'on-brand': {
+          DEFAULT: 'var(--color-on-brand)',
+          muted: 'var(--color-on-brand-muted)',
         },
-        flame: {
-          red: '#E74C3C',
-          orange: '#F39C12',
-          yellow: '#F1C40F',
+
+        // Accent colors
+        primary: {
+          DEFAULT: 'var(--color-primary)',
+          hover: 'var(--color-primary-hover)',
+          dark: 'var(--color-primary-dark)',
         },
-        neutral: {
-          light: '#F8FAFC',
-          DEFAULT: '#94A3B8',
-          dark: '#0B0F12',
+        'on-primary': 'var(--color-on-primary)',
+        secondary: {
+          DEFAULT: 'var(--color-secondary)',
+          hover: 'var(--color-secondary-hover)',
+        },
+
+        // Border colors
+        border: {
+          DEFAULT: 'var(--color-border)',
+          brand: 'var(--color-border-brand)',
+        },
+
+        // Card accent colors
+        accent: {
+          1: 'var(--color-accent-1)',
+          2: 'var(--color-accent-2)',
+          3: 'var(--color-accent-3)',
+        },
+
+        // Code blocks
+        code: {
+          bg: 'var(--color-code-bg)',
+          text: 'var(--color-code-text)',
+        },
+
+        // State colors (consistent across themes)
+        success: 'var(--color-success)',
+        warning: 'var(--color-warning)',
+        error: 'var(--color-error)',
+        info: 'var(--color-info)',
+
+        // Gradient colors
+        gradient: {
+          start: 'var(--theme-gradient-start)',
+          mid: 'var(--theme-gradient-mid)',
+          end: 'var(--theme-gradient-end)',
         },
       },
       fontFamily: {

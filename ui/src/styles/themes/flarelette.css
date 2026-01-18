@@ -1,0 +1,63 @@
+/**
+ * Flarelette Theme
+ * Navy, teal, and orange color palette
+ */
+
+:root,
+.theme-flarelette {
+  /* Brand palette (thematic) */
+  --theme-navy: #0F2B45;
+  --theme-navy-light: #1a3d5f;
+  --theme-navy-dark: #0B0F12;
+  --theme-teal: #00C2A8;
+  --theme-teal-light: #33d1bb;
+  --theme-teal-dark: #009b86;
+  --theme-orange: #FF7A00;
+  --theme-orange-light: #ff9433;
+
+  /* Gradient accent */
+  --theme-gradient-start: #E74C3C;
+  --theme-gradient-mid: #F39C12;
+  --theme-gradient-end: #F1C40F;
+
+  /* Surface colors (backgrounds) */
+  --color-surface: #F8FAFC;
+  --color-surface-elevated: #FFFFFF;
+  --color-surface-brand: var(--theme-navy);
+  --color-surface-brand-light: var(--theme-navy-light);
+  --color-surface-brand-dark: var(--theme-navy-dark);
+
+  /* Text colors */
+  --color-on-surface: #1e293b;
+  --color-on-surface-muted: #64748b;
+  --color-on-surface-faint: #94a3b8;
+  --color-on-brand: #FFFFFF;
+  --color-on-brand-muted: #cbd5e1;
+
+  /* Accent colors */
+  --color-primary: var(--theme-teal);
+  --color-primary-hover: var(--theme-teal-light);
+  --color-primary-dark: var(--theme-teal-dark);
+  --color-on-primary: #FFFFFF;
+  --color-secondary: var(--theme-orange);
+  --color-secondary-hover: var(--theme-orange-light);
+
+  /* Border colors */
+  --color-border: #e2e8f0;
+  --color-border-brand: var(--theme-navy-light);
+
+  /* Card accent borders (for feature cards) */
+  --color-accent-1: var(--theme-orange);
+  --color-accent-2: var(--theme-teal);
+  --color-accent-3: var(--theme-navy);
+
+  /* Code blocks */
+  --color-code-bg: var(--theme-navy-light);
+  --color-code-text: var(--theme-teal);
+
+  /* State colors (consistent across themes) */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+}

@@ -22,19 +22,19 @@ content/
 
 ### Content Service (`db/content-service/schema.sql`)
 
-| Table | Purpose |
-|-------|---------|
+| Table    | Purpose                                            |
+| -------- | -------------------------------------------------- |
 | `events` | Calendar events (games, performances, fundraisers) |
-| `news` | News articles and announcements |
-| `roster` | Team members (cheerleaders, cast, etc.) |
-| `pages` | Static content pages (about, booster club) |
+| `news`   | News articles and announcements                    |
+| `roster` | Team members (cheerleaders, cast, etc.)            |
+| `pages`  | Static content pages (about, booster club)         |
 
 ### Forms Service (`db/forms-service/schema.sql`)
 
-| Table | Purpose |
-|-------|---------|
-| `contact_submissions` | Contact form submissions |
-| `signup_submissions` | Tryout/signup form submissions |
+| Table                 | Purpose                        |
+| --------------------- | ------------------------------ |
+| `contact_submissions` | Contact form submissions       |
+| `signup_submissions`  | Tryout/signup form submissions |
 
 ## Seed Data
 
@@ -95,13 +95,13 @@ These images are automatically seeded to R2 when running `pnpm setup:local`.
 
 ### Image Files
 
-| File | Description |
-|------|-------------|
-| `cheer-aisha.jpg` | Roster member headshot |
-| `cheer-emma.jpg` | Roster member headshot |
+| File               | Description            |
+| ------------------ | ---------------------- |
+| `cheer-aisha.jpg`  | Roster member headshot |
+| `cheer-emma.jpg`   | Roster member headshot |
 | `cheer-marcus.jpg` | Roster member headshot |
-| `cheer-sarah.jpg` | Roster member headshot |
-| `cheer-tyler.jpg` | Roster member headshot |
+| `cheer-sarah.jpg`  | Roster member headshot |
+| `cheer-tyler.jpg`  | Roster member headshot |
 
 ### How R2 Seeding Works
 
@@ -116,6 +116,7 @@ wrangler r2 object put images/cheer-aisha.jpg --file=content/object-storage/imag
 ```
 
 Images are accessible at:
+
 - Local: `http://localhost:4321/api/images/cheer-aisha.jpg`
 - Production: `https://your-domain.com/api/images/cheer-aisha.jpg`
 

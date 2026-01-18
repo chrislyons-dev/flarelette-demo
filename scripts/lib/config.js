@@ -19,8 +19,7 @@ export function getConfig(env) {
         local: true,
         contentWorkerDir: 'workers/content-service',
         formsWorkerDir: 'workers/forms-service',
-        command: (workerDir, dbName, sql) =>
-          `wrangler d1 execute ${dbName} --local --file=${sql}`,
+        command: (workerDir, dbName, sql) => `wrangler d1 execute ${dbName} --local --file=${sql}`,
         commandInline: (workerDir, dbName, sql) =>
           `wrangler d1 execute ${dbName} --local --command "${sql}"`,
       },

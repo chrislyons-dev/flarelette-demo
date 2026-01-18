@@ -20,9 +20,9 @@ Welcome to the documentation for the Flarelette microservices template.
 
 The `notes/` directory contains design documents used during development:
 
-- **coding.md** - TypeScript coding standards and best practices
-- **style-guide.md** - Brand guidelines and visual identity
-- **tone-of-voice.md** - Documentation writing style
+- [**coding.md**](../notes/coding.md) - TypeScript coding standards and best practices
+- [**style-guide.md**](../notes/style-guide.md) - Brand guidelines and visual identity
+- [**tone-of-voice.md**](../notes/tone-of-voice.md) - Documentation writing style
 
 These are preserved for reference but not required reading for using the template.
 

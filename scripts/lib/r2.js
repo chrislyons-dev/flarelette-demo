@@ -80,9 +80,7 @@ export async function seedImages(config, sourceDir, bucket, prefix = '') {
   // Get all files in directory
   const files = await fs.readdir(sourcePath)
   const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg']
-  const imageFiles = files.filter(f =>
-    imageExtensions.includes(path.extname(f).toLowerCase())
-  )
+  const imageFiles = files.filter((f) => imageExtensions.includes(path.extname(f).toLowerCase()))
 
   if (imageFiles.length === 0) {
     return { uploaded: 0, skipped: true, message: 'No image files found' }
@@ -101,13 +99,13 @@ export async function seedImages(config, sourceDir, bucket, prefix = '') {
     }
   }
 
-  const uploaded = results.filter(r => r.success).length
-  const failed = results.filter(r => !r.success)
+  const uploaded = results.filter((r) => r.success).length
+  const failed = results.filter((r) => !r.success)
 
   return {
     uploaded,
     total: imageFiles.length,
-    failed: failed.length > 0 ? failed : undefined
+    failed: failed.length > 0 ? failed : undefined,
   }
 }
 
@@ -122,11 +120,7 @@ export async function clearBucket(config, bucket) {
   if (config.isLocal) {
     // For local dev, Miniflare stores R2 data in .wrangler/state
     // Clear by deleting the R2 storage directory
-    const r2StorageDir = path.join(
-      PROJECT_ROOT,
-      config.r2.imageWorkerDir,
-      '.wrangler/state/v3/r2'
-    )
+    const r2StorageDir = path.join(PROJECT_ROOT, config.r2.imageWorkerDir, '.wrangler/state/v3/r2')
 
     try {
       await fs.rm(r2StorageDir, { recursive: true, force: true })

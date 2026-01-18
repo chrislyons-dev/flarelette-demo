@@ -43,25 +43,25 @@ Set these secrets in your GitHub repository settings (Settings → Secrets and v
 
 ### Required for All Deployments
 
-| Secret | Description |
-|--------|-------------|
-| `CLOUDFLARE_API_TOKEN` | Cloudflare API token with Workers and Pages permissions |
-| `CLOUDFLARE_ACCOUNT_ID` | Your Cloudflare account ID |
+| Secret                  | Description                                             |
+| ----------------------- | ------------------------------------------------------- |
+| `CLOUDFLARE_API_TOKEN`  | Cloudflare API token with Workers and Pages permissions |
+| `CLOUDFLARE_ACCOUNT_ID` | Your Cloudflare account ID                              |
 
 ### Optional Secrets
 
-| Secret | Description |
-|--------|-------------|
+| Secret               | Description                                                   |
+| -------------------- | ------------------------------------------------------------- |
 | `CLOUDFLARE_ZONE_ID` | Zone ID for API Shield configuration (requires custom domain) |
 
 ### Environment Variables (Optional)
 
 Configure these under Settings → Environments → [preview/production] → Variables:
 
-| Variable | Description |
-|----------|-------------|
+| Variable             | Description                        |
+| -------------------- | ---------------------------------- |
 | `PRODUCTION_API_URL` | API base URL for production builds |
-| `PREVIEW_API_URL` | API base URL for preview builds |
+| `PREVIEW_API_URL`    | API base URL for preview builds    |
 
 **Note:** `JWT_SECRET` is **no longer required as a stored secret**. The deployment workflow automatically generates an ephemeral JWT secret for each deployment.
 

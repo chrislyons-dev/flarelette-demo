@@ -17,16 +17,16 @@ pnpm kill-ports
 
 ## Available Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start all services (gateway, content, forms, images, UI) with color-coded output |
-| `pnpm setup:local` | Full local setup: generate keys, create databases, seed data |
-| `pnpm setup:preview` | Setup preview environment (drops and recreates tables) |
-| `pnpm seed:preview` | Seed preview environment (no table drop) |
-| `pnpm seed:prod` | Seed production environment (no table drop, safe mode) |
-| `pnpm kill-ports` | Kill processes on dev ports (8787-8790, 4321) |
-| `pnpm generate:keys` | Generate fresh 64-byte HS512 JWT secret |
-| `pnpm mint-token` | Generate admin token for testing protected endpoints |
+| Command              | Description                                                                      |
+| -------------------- | -------------------------------------------------------------------------------- |
+| `pnpm dev`           | Start all services (gateway, content, forms, images, UI) with color-coded output |
+| `pnpm setup:local`   | Full local setup: generate keys, create databases, seed data                     |
+| `pnpm setup:preview` | Setup preview environment (drops and recreates tables)                           |
+| `pnpm seed:preview`  | Seed preview environment (no table drop)                                         |
+| `pnpm seed:prod`     | Seed production environment (no table drop, safe mode)                           |
+| `pnpm kill-ports`    | Kill processes on dev ports (8787-8790, 4321)                                    |
+| `pnpm generate:keys` | Generate fresh 64-byte HS512 JWT secret                                          |
+| `pnpm mint-token`    | Generate admin token for testing protected endpoints                             |
 
 ## Directory Structure
 
@@ -59,6 +59,7 @@ pnpm setup:local
 ```
 
 This will:
+
 1. Check prerequisites (wrangler installed)
 2. Generate JWT keys if not present
 3. Create `ui/.env` from example
@@ -87,13 +88,13 @@ pnpm seed:prod
 
 `pnpm dev` starts all services using `concurrently`:
 
-| Service | Port | Color |
-|---------|------|-------|
-| Content Service | 8788 | Blue |
-| Forms Service | 8789 | Magenta |
-| Image Service | 8790 | Yellow |
-| Gateway | 8787 | Green |
-| UI (Astro) | 4321 | Cyan |
+| Service         | Port | Color   |
+| --------------- | ---- | ------- |
+| Content Service | 8788 | Blue    |
+| Forms Service   | 8789 | Magenta |
+| Image Service   | 8790 | Yellow  |
+| Gateway         | 8787 | Green   |
+| UI (Astro)      | 4321 | Cyan    |
 
 All output is prefixed with the service name for easy debugging.
 
@@ -108,6 +109,7 @@ pnpm kill-ports
 ```
 
 This works on Windows, macOS, and Linux. It will find and kill processes on:
+
 - 8787 (Gateway)
 - 8788 (Content Service)
 - 8789 (Forms Service)
@@ -123,8 +125,8 @@ Environment-aware configuration for D1 databases:
 ```javascript
 import { getConfig } from './lib/config.js'
 
-const config = getConfig('local')  // or 'preview', 'production'
-console.log(config.d1.contentDb)   // 'content-db'
+const config = getConfig('local') // or 'preview', 'production'
+console.log(config.d1.contentDb) // 'content-db'
 ```
 
 ### `lib/db.js`
@@ -153,8 +155,8 @@ logger.warning('Using defaults')
 logger.info('Processing...')
 logger.dim('Debug info')
 logger.progress(5, 10, 'Item 5')
-logger.finish()  // Shows elapsed time
-logger.fatal('Cannot continue', error)  // Exits process
+logger.finish() // Shows elapsed time
+logger.fatal('Cannot continue', error) // Exits process
 ```
 
 ### `lib/r2.js`

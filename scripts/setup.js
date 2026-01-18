@@ -188,16 +188,14 @@ async function setupR2(config, clean) {
 
   // Seed images from content folder
   logger.info('Seeding roster images...')
-  const result = await seedImages(
-    config,
-    'content/object-storage/image-service',
-    bucket
-  )
+  const result = await seedImages(config, 'content/object-storage/image-service', bucket)
 
   if (result.skipped) {
     logger.dim(result.message)
   } else if (result.failed) {
-    logger.warning(`Uploaded ${result.uploaded}/${result.total} images (${result.failed.length} failed)`)
+    logger.warning(
+      `Uploaded ${result.uploaded}/${result.total} images (${result.failed.length} failed)`
+    )
   } else {
     logger.success(`Uploaded ${result.uploaded} images to R2`)
   }

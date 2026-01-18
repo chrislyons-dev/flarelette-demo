@@ -420,6 +420,7 @@ Cloudflare's generous free tier includes:
 - [API Shield Configuration](docs/api-shield.md) - Schema validation setup
 - [Free Tier Guide](docs/free-tier-limits.md) - Staying under quotas
 - [Adding Services](docs/adding-services.md) - Extension patterns
+- [Changing the site's theme](docs/semantic-theming.md) - Semantic Theming
 
 ---
 

@@ -30,10 +30,10 @@ function formatDate(dateString: string) {
 ---
 
 <BaseLayout title="Events" description="Upcoming events and performances">
-  <div class="bg-navy text-white py-12 border-b-4 border-orange">
+  <div class="bg-surface-brand text-on-brand py-12 border-b-4 border-accent-1">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 class="text-4xl font-bold">Upcoming Events</h1>
-      <p class="mt-2 text-neutral-light">Performances, games, and competitions</p>
+      <p class="mt-2 text-on-brand-muted">Performances, games, and competitions</p>
     </div>
   </div>
 
@@ -43,31 +43,31 @@ function formatDate(dateString: string) {
         {error}
       </div>
     ) : events.length === 0 ? (
-      <div class="bg-gray-50 rounded-lg p-8 text-center text-gray-500">
+      <div class="bg-surface-elevated rounded-lg p-8 text-center text-on-surface-muted">
         No upcoming events at this time.
       </div>
     ) : (
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {events.map((event) => (
-          <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow border-l-4 border-teal">
+          <div class="bg-surface-elevated rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow border-l-4 border-primary">
             <div class="flex items-start justify-between">
               <div class="flex-1">
-                <h2 class="text-xl font-bold text-navy mb-2">{event.title}</h2>
-                <div class="text-sm text-gray-700 space-y-1 leading-relaxed">
+                <h2 class="text-xl font-bold text-on-surface mb-2">{event.title}</h2>
+                <div class="text-sm text-on-surface-muted space-y-1 leading-relaxed">
                   <p>
-                    <strong class="text-navy">Date:</strong> {formatDate(event.date)}
+                    <strong class="text-on-surface">Date:</strong> {formatDate(event.date)}
                   </p>
                   {event.location && (
                     <p>
-                      <strong class="text-navy">Location:</strong> {event.location}
+                      <strong class="text-on-surface">Location:</strong> {event.location}
                     </p>
                   )}
                 </div>
                 {event.description && (
-                  <p class="mt-3 text-gray-700 leading-relaxed">{event.description}</p>
+                  <p class="mt-3 text-on-surface-muted leading-relaxed">{event.description}</p>
                 )}
                 {event.category && (
-                  <span class="inline-block mt-3 px-3 py-1 bg-teal text-white text-xs font-semibold rounded-full">
+                  <span class="inline-block mt-3 px-3 py-1 bg-primary text-on-primary text-xs font-semibold rounded-full">
                     {event.category}
                   </span>
                 )}

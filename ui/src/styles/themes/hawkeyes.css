@@ -1,0 +1,54 @@
+/**
+ * Hawkeyes Theme
+ * Black and gold color palette
+ */
+
+.theme-hawkeyes {
+  /* Brand palette (thematic) */
+  --theme-black: #000000;
+  --theme-black-light: #1a1a1a;
+  --theme-black-dark: #000000;
+  --theme-gold: #FFCD00;
+  --theme-gold-light: #FFD633;
+  --theme-gold-dark: #CCa400;
+
+  /* Gradient accent */
+  --theme-gradient-start: #FFCD00;
+  --theme-gradient-mid: #FFD633;
+  --theme-gradient-end: #FFE066;
+
+  /* Surface colors (backgrounds) */
+  --color-surface: #f4f4f5;
+  --color-surface-elevated: #FFFFFF;
+  --color-surface-brand: var(--theme-black);
+  --color-surface-brand-light: var(--theme-black-light);
+  --color-surface-brand-dark: var(--theme-black-dark);
+
+  /* Text colors */
+  --color-on-surface: #18181b;
+  --color-on-surface-muted: #52525b;
+  --color-on-surface-faint: #a1a1aa;
+  --color-on-brand: var(--theme-gold);
+  --color-on-brand-muted: #fef3c7;
+
+  /* Accent colors */
+  --color-primary: var(--theme-gold-dark);
+  --color-primary-hover: var(--theme-gold);
+  --color-primary-dark: #997a00;
+  --color-on-primary: #000000;
+  --color-secondary: var(--theme-black);
+  --color-secondary-hover: var(--theme-black-light);
+
+  /* Border colors */
+  --color-border: #e4e4e7;
+  --color-border-brand: #333333;
+
+  /* Card accent borders (for feature cards) */
+  --color-accent-1: var(--theme-gold);
+  --color-accent-2: var(--theme-black);
+  --color-accent-3: var(--theme-gold-dark);
+
+  /* Code blocks */
+  --color-code-bg: var(--theme-black-light);
+  --color-code-text: var(--theme-gold);
+}
