@@ -42,6 +42,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Validate JWT_SECRET (must be 64 bytes for HS512)
+        run: |
+          SECRET_LENGTH=$(echo -n "${{ secrets.JWT_SECRET }}" | base64 -d 2>/dev/null | wc -c)
+          if [ "$SECRET_LENGTH" -lt 64 ]; then
+            echo "❌ JWT_SECRET is only $SECRET_LENGTH bytes. HS512 requires 64 bytes minimum."
+            echo "   Generate a new secret with: node -e \"console.log(require('crypto').randomBytes(64).toString('base64'))\""
+            exit 1
+          fi
+          echo "✅ JWT_SECRET is valid ($SECRET_LENGTH bytes)"
+
       - name: Deploy Gateway
         uses: cloudflare/wrangler-action@v3
         with:

@@ -633,6 +633,13 @@
           "containerRef": "flarelette_demo_ui",
           "name": "flarelette-demo-ui",
           "type": "Cloudflare Worker",
+          "bindings": [
+            {
+              "type": "service",
+              "binding": "GATEWAY",
+              "service": "gateway"
+            }
+          ],
           "vars": {
             "PUBLIC_API_BASE_URL": "https://flarelette.chrislyons.dev",
             "PUBLIC_SITE_URL": "https://flarelette.chrislyons.dev"
@@ -731,6 +738,13 @@
           "containerRef": "flarelette_demo_ui",
           "name": "flarelette-demo-ui",
           "type": "Cloudflare Worker",
+          "bindings": [
+            {
+              "type": "service",
+              "binding": "GATEWAY",
+              "service": "gateway"
+            }
+          ],
           "vars": {
             "PUBLIC_API_BASE_URL": "https://preview.flarelette.chrislyons.dev",
             "PUBLIC_SITE_URL": "https://preview.flarelette.chrislyons.dev"
@@ -748,6 +762,13 @@
           "containerRef": "flarelette_demo_ui",
           "name": "flarelette-demo-ui",
           "type": "Cloudflare Worker",
+          "bindings": [
+            {
+              "type": "service",
+              "binding": "GATEWAY",
+              "service": "gateway"
+            }
+          ],
           "vars": {
             "PUBLIC_API_BASE_URL": "http://localhost:8787",
             "PUBLIC_SITE_URL": "http://localhost:4321"
@@ -757,6 +778,12 @@
     }
   ],
   "containerRelationships": [
+    {
+      "description": "Service binding: GATEWAY",
+      "tags": ["service-binding"],
+      "source": "flarelette_demo_ui",
+      "destination": "gateway"
+    },
     {
       "description": "Service binding: CONTENT_SERVICE",
       "tags": ["service-binding"],
@@ -1183,6 +1210,24 @@
     }
   ],
   "deploymentRelationships": [
+    {
+      "description": "Service binding: GATEWAY",
+      "tags": ["service-binding", "runtime"],
+      "source": "production__flarelette_demo_ui",
+      "destination": "production__gateway"
+    },
+    {
+      "description": "Service binding: GATEWAY",
+      "tags": ["service-binding", "runtime"],
+      "source": "preview__flarelette_demo_ui",
+      "destination": "preview__gateway"
+    },
+    {
+      "description": "Service binding: GATEWAY",
+      "tags": ["service-binding", "runtime"],
+      "source": "development__flarelette_demo_ui",
+      "destination": "development__gateway"
+    },
     {
       "description": "Service binding: CONTENT_SERVICE",
       "tags": ["service-binding", "runtime"],

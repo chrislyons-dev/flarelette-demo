@@ -236,6 +236,7 @@ workspace "archlette-demo" "Archlette demo application" {
             }
 
             # Container relationships
+            flarelette_demo_ui -> gateway "Service binding: GATEWAY"
             gateway -> content_service "Service binding: CONTENT_SERVICE"
             gateway -> image_service "Service binding: IMAGE_SERVICE"
             gateway -> forms_service "Service binding: FORMS_SERVICE"

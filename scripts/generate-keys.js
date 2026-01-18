@@ -1,55 +1,64 @@
 /**
- * Generate Ed25519 keypair for local development
+ * Generate 64-byte HS512 secret for local development
+ *
+ * HS512 requires a 512-bit (64-byte) secret for proper security.
+ * This script generates a cryptographically secure secret and writes
+ * it to the appropriate .dev.vars files.
  *
  * Usage: node scripts/generate-keys.js
  */
-import { generateKeyPairSync } from 'crypto'
-import { writeFileSync } from 'fs'
-import { join } from 'path'
+import { randomBytes } from 'crypto'
+import { writeFileSync, existsSync, mkdirSync } from 'fs'
+import { join, dirname } from 'path'
+import { fileURLToPath } from 'url'
 
-console.log('🔐 Generating Ed25519 keypair for local development...\n')
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+const PROJECT_ROOT = join(__dirname, '..')
 
-const kid = `v${Date.now()}`
+console.log('🔐 Generating 64-byte HS512 secret for local development...\n')
 
-const { privateKey, publicKey } = generateKeyPairSync('ed25519', {
-  privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
-  publicKeyEncoding: { type: 'spki', format: 'der' },
-})
+// Generate 64 bytes (512 bits) of random data
+const secretBytes = randomBytes(64)
+const secretBase64 = secretBytes.toString('base64')
 
-// Extract raw x coordinate (last 32 bytes of SPKI DER)
-const x = Buffer.from(publicKey.slice(-32)).toString('base64url')
+console.log(
+  `✅ Generated 64-byte secret (${secretBytes.length} bytes, ${secretBase64.length} chars base64)`
+)
 
-const jwks = {
-  keys: [
-    {
-      kty: 'OKP',
-      crv: 'Ed25519',
-      alg: 'EdDSA',
-      use: 'sig',
-      kid: kid,
-      x: x,
-    },
-  ],
-}
-
-// Write private key to .dev.vars (for local development)
-const devVars = `
-# Generated Ed25519 keypair for local development
+// Common JWT configuration
+const jwtConfig = `
+# JWT Configuration for local development
 # DO NOT COMMIT THIS FILE!
-ED25519_PRIVATE_PEM = """
-${privateKey}
-"""
-JWKS_KID = "${kid}"
+JWT_SECRET=${secretBase64}
+JWT_ISS=https://gateway.internal
+JWT_AUD=flarelette.mesh
 `
 
-writeFileSync(join(process.cwd(), 'workers/gateway/.dev.vars'), devVars.trim())
+// Write to gateway .dev.vars
+const gatewayDevVars = `${jwtConfig.trim()}
+USE_HTTP_SERVICES=true
+`
 
-// Write JWKS to gateway
-writeFileSync(join(process.cwd(), 'workers/gateway/jwks.json'), JSON.stringify(jwks, null, 2))
+const gatewayPath = join(PROJECT_ROOT, 'workers', 'gateway', '.dev.vars')
+writeFileSync(gatewayPath, gatewayDevVars)
+console.log(`   Gateway .dev.vars → ${gatewayPath}`)
 
-console.log('✅ Generated keypair:')
-console.log(`   Kid: ${kid}`)
-console.log(`   Private key → workers/gateway/.dev.vars`)
-console.log(`   JWKS → workers/gateway/jwks.json`)
-console.log('\n⚠️  DO NOT commit .dev.vars to git!')
+// Write to content-service .dev.vars
+const contentPath = join(PROJECT_ROOT, 'workers', 'content-service', '.dev.vars')
+writeFileSync(contentPath, jwtConfig.trim())
+console.log(`   Content service .dev.vars → ${contentPath}`)
+
+// Write to forms-service .dev.vars
+const formsPath = join(PROJECT_ROOT, 'workers', 'forms-service', '.dev.vars')
+writeFileSync(formsPath, jwtConfig.trim())
+console.log(`   Forms service .dev.vars → ${formsPath}`)
+
+// Write to image-service .dev.vars
+const imagePath = join(PROJECT_ROOT, 'workers', 'image-service', '.dev.vars')
+writeFileSync(imagePath, jwtConfig.trim())
+console.log(`   Image service .dev.vars → ${imagePath}`)
+
+console.log('\n⚠️  DO NOT commit .dev.vars files to git!')
 console.log('\n🚀 You can now run: pnpm dev')
+console.log('\n💡 For admin testing, run: node scripts/mint-token.js')

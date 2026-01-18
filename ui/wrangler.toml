@@ -9,6 +9,7 @@
 name = "flarelette-demo-ui"
 compatibility_date = "2025-10-10"
 
+services = [{ service = "gateway", binding = "GATEWAY" }]
 # Production environment configuration
 [env.production.vars]
 PUBLIC_API_BASE_URL = "https://flarelette.chrislyons.dev"

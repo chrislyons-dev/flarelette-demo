@@ -16,6 +16,7 @@
     "setup": "node scripts/setup.js",
     "setup:d1": "bash scripts/setup-d1.sh",
     "generate:keys": "node scripts/generate-keys.js",
+    "mint-token": "node scripts/mint-token.js",
     "test:token": "node scripts/test-token.js",
     "type-check": "pnpm -r type-check",
     "lint": "pnpm -r lint",

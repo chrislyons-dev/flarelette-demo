@@ -89,6 +89,7 @@ rectangle "archlette-demo\n<size:10>[Software System]</size>" <<archlettedemo>> 
   rectangle "==flarelette-demo-ui\n<size:10>[Container: Cloudflare Worker]</size>\n\nCloudflare Worker: flarelette-demo-ui | Astro frontend for Flarelette demo" <<archlettedemo.flarelettedemoui>> as archlettedemo.flarelettedemoui
 }
 
+archlettedemo.flarelettedemoui -[#707070,thickness=2]-> archlettedemo.gateway : "<color:#707070>Service binding: GATEWAY"
 archlettedemo.gateway -[#707070,thickness=2]-> archlettedemo.contentservice : "<color:#707070>Service binding: CONTENT_SERVICE"
 archlettedemo.gateway -[#707070,thickness=2]-> archlettedemo.imageservice : "<color:#707070>Service binding: IMAGE_SERVICE"
 archlettedemo.gateway -[#707070,thickness=2]-> archlettedemo.formsservice : "<color:#707070>Service binding: FORMS_SERVICE"
