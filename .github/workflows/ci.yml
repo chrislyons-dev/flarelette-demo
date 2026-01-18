@@ -1,160 +1,179 @@
 name: CI
 
 on:
-    push:
-        branches: [main]
-    pull_request:
-        branches: [main]
-    workflow_dispatch:
+  push:
+    branches: ["**"] # Run on all branches
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
-    lint:
-        name: Lint
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                  version: 9
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "20"
-                  cache: "pnpm"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
 
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-            - name: Run ESLint
-              run: pnpm run lint
+      - name: Run ESLint
+        run: pnpm run lint
 
-            - name: Check formatting
-              run: pnpm run format:check
+      - name: Check formatting
+        run: pnpm run format:check
 
-    type-check:
-        name: Type Check
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+  type-check:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                  version: 9
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "20"
-                  cache: "pnpm"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
 
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-            - name: Type check all packages
-              run: pnpm run type-check
+      - name: Type check all packages
+        run: pnpm run type-check
 
-    build:
-        name: Build
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                  version: 9
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "20"
-                  cache: "pnpm"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
 
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-            - name: Build all packages
-              run: pnpm run build
+      - name: Build all packages
+        run: pnpm run build
 
-            - name: Upload Gateway artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: gateway-build
-                  path: workers/gateway/dist
-                  retention-days: 7
+      - name: Upload Gateway artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gateway-build
+          path: workers/gateway/dist
+          retention-days: 7
 
-            - name: Upload Content Service artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: content-service-build
-                  path: workers/content-service/dist
-                  retention-days: 7
+      - name: Upload Content Service artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: content-service-build
+          path: workers/content-service/dist
+          retention-days: 7
 
-            - name: Upload Forms Service artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: forms-service-build
-                  path: workers/forms-service/dist
-                  retention-days: 7
+      - name: Upload Forms Service artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: forms-service-build
+          path: workers/forms-service/dist
+          retention-days: 7
 
-            - name: Upload Image Service artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: image-service-build
-                  path: workers/image-service/dist
-                  retention-days: 7
+      - name: Upload Image Service artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-service-build
+          path: workers/image-service/dist
+          retention-days: 7
 
-            - name: Upload UI artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: ui-build
-                  path: ui/dist
-                  retention-days: 7
+      - name: Upload UI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-build
+          path: ui/dist
+          retention-days: 7
 
-    test:
-        name: Test (Node ${{ matrix.node-version }})
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node-version: [18, 20]
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                  version: 9
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
-            - name: Setup Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v4
-              with:
-                  node-version: ${{ matrix.node-version }}
-                  cache: "pnpm"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
 
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-            - name: Run tests
-              run: pnpm test || echo "No tests defined"
-              continue-on-error: true
+      - name: Run tests
+        run: pnpm test || echo "No tests defined yet"
 
-            - name: Generate coverage report
-              if: matrix.node-version == 20
-              run: pnpm run test:coverage || echo "No coverage script defined"
-              continue-on-error: true
+      - name: Generate coverage report
+        run: pnpm run test:coverage || echo "No coverage script defined"
+        continue-on-error: true
 
-            - name: Upload coverage report
-              if: matrix.node-version == 20 && hashFiles('coverage/**') != ''
-              uses: actions/upload-artifact@v4
-              with:
-                  name: coverage-report
-                  path: coverage
-                  retention-days: 7
+      - name: Upload coverage report
+        if: hashFiles('coverage/**') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage
+          retention-days: 7
+
+  api-security:
+    name: API Security Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate OpenAPI schema
+        run: pnpm api-security

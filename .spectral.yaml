@@ -1,0 +1,100 @@
+# Spectral API Security Linting Configuration
+# OpenAPI validation and security rule enforcement
+#
+# Run with: pnpm api-security
+# Runs automatically in CI via the ci.yml workflow
+
+extends:
+  - spectral:oas
+
+rules:
+  # OpenAPI Structure Rules (from spectral:oas) - explicitly enabled
+  oas3-api-servers: error
+  oas3-examples-value-or-externalValue: error
+  oas3-operation-security-defined: warn
+  oas3-parameter-description: warn
+  oas3-schema: error
+  oas3-server-not-example.com: error
+  oas3-valid-media-example: error
+  oas3-valid-schema-example: error
+
+  # Custom Security Rules
+
+  # Ensure sensitive data fields are not exposed in URLs
+  no-credentials-in-url:
+    description: Credentials should not be passed in URL parameters
+    message: "{{property}} should not contain sensitive data like passwords or tokens"
+    given: $.paths..parameters[?(@.in == 'query' || @.in == 'path')]
+    severity: error
+    then:
+      field: name
+      function: pattern
+      functionOptions:
+        notMatch: ^(password|secret|token|apikey|api_key|auth)$
+
+  # Require descriptions for all operations
+  operation-description:
+    description: All operations should have descriptions
+    message: "Operation {{property}} is missing a description"
+    given: $.paths.*[get,post,put,patch,delete]
+    severity: warn
+    then:
+      field: description
+      function: truthy
+
+  # Require validation constraints on input parameters
+  parameter-constraints:
+    description: Query and path parameters should have schema constraints
+    message: "Parameter {{property}} should define a schema with validation constraints"
+    given: $.paths..parameters[?(@.in == 'query' || @.in == 'path')]
+    severity: warn
+    then:
+      field: schema
+      function: truthy
+
+  # Ensure sensitive operations use POST/PUT/PATCH/DELETE, not GET
+  no-get-for-mutations:
+    description: GET should not be used for operations that modify state
+    message: "GET operation '{{property}}' appears to modify state (contains create/update/delete)"
+    given: $.paths.*[?(@property == 'get')]
+    severity: error
+    then:
+      field: summary
+      function: pattern
+      functionOptions:
+        notMatch: (create|update|delete|modify|remove|add)
+
+  # Require security schemes to be properly defined
+  security-scheme-defined:
+    description: All security schemes must be properly defined in components
+    message: "Security scheme must have a valid type"
+    given: $.components.securitySchemes.*
+    severity: error
+    then:
+      field: type
+      function: enumeration
+      functionOptions:
+        values:
+          - apiKey
+          - http
+          - oauth2
+          - openIdConnect
+
+  # Validate content types - only allow standard MIME types
+  valid-content-types:
+    description: Only use standard content types
+    message: "Content type {{property}} is not a standard MIME type"
+    given: $.paths.*.*.requestBody.content.*~
+    severity: warn
+    then:
+      function: enumeration
+      functionOptions:
+        values:
+          - application/json
+          - application/x-www-form-urlencoded
+          - multipart/form-data
+          - text/plain
+          - application/xml
+          - image/jpeg
+          - image/png
+          - image/webp

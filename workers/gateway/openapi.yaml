@@ -6,12 +6,12 @@ info:
     Gateway for Flarelette microservices architecture.
 
     All endpoints perform input validation with Zod (zero trust).
-    Internal JWTs are minted using EdDSA (Ed25519) and include short TTL.
+    Internal JWTs are minted using HS512 and include short TTL.
 
     **Authentication Flow:**
     1. Anonymous requests receive internal JWT with `sub: "anon:*"` and `roles: ["anonymous"]`
     2. Authenticated requests (Auth0) are exchanged for internal JWT via RFC 8693 semantics
-    3. All microservices verify internal JWTs via JWKS
+    3. All microservices verify internal JWTs using shared HS512 secret
   contact:
     name: Chris Lyons
     url: https://github.com/chrislyons-dev/flarelette-demo
@@ -38,53 +38,71 @@ tags:
 paths:
   /api/health:
     get:
+      operationId: getHealth
       summary: Health check
-      description: Returns service health and metadata
+      description: Returns service health and metadata including version and timestamp
       tags: [Health]
       responses:
-        '200':
+        "200":
           description: Service is healthy
           content:
             application/json:
               schema:
                 type: object
+                required: [ok, service, timestamp]
                 properties:
                   ok:
                     type: boolean
+                    description: Service health status
                   service:
                     type: string
+                    description: Service name
+                    maxLength: 50
+                    pattern: "^[a-z][a-z0-9-]*$"
                   timestamp:
                     type: string
                     format: date-time
+                    description: Current server time in ISO 8601 format
                   version:
                     type: string
+                    description: Service version
+                    maxLength: 20
+                    pattern: "^\\d+\\.\\d+\\.\\d+$"
 
   /.well-known/jwks.json:
     get:
+      operationId: getJwks
       summary: JSON Web Key Set
-      description: Public keys for verifying internal JWTs (accessed via Service Binding)
+      description: Public keys for verifying internal JWTs (accessed via Service Binding, not for external use)
       tags: [Health]
       responses:
-        '200':
-          description: JWKS
+        "200":
+          description: JWKS containing public keys
           content:
             application/json:
               schema:
                 type: object
+                required: [keys]
                 properties:
                   keys:
                     type: array
+                    description: Array of JSON Web Keys
+                    maxItems: 10
                     items:
                       type: object
+                      description: Individual JWK
 
   /api/content/events:
     get:
+      operationId: listEvents
       summary: List events
-      description: Retrieve upcoming events (public endpoint)
+      description: Retrieve upcoming events with pagination support (public endpoint)
       tags: [Content]
       parameters:
         - name: limit
           in: query
+          description: Maximum number of events to return (1-100)
+          required: false
           schema:
             type: integer
             minimum: 1
@@ -92,35 +110,47 @@ paths:
             default: 10
         - name: offset
           in: query
+          description: Number of events to skip for pagination (0-10000)
+          required: false
           schema:
             type: integer
             minimum: 0
+            maximum: 10000
             default: 0
       responses:
-        '200':
-          description: List of events
+        "200":
+          description: Paginated list of events
           content:
             application/json:
               schema:
                 type: object
+                required: [events, total]
                 properties:
                   events:
                     type: array
+                    description: Array of event objects
+                    maxItems: 100
                     items:
-                      $ref: '#/components/schemas/Event'
+                      $ref: "#/components/schemas/Event"
                   total:
                     type: integer
-        '400':
-          $ref: '#/components/responses/BadRequest'
+                    description: Total number of events available
+                    minimum: 0
+                    maximum: 1000000
+        "400":
+          $ref: "#/components/responses/BadRequest"
 
   /api/content/news:
     get:
+      operationId: listNews
       summary: List news articles
-      description: Retrieve published news (public endpoint)
+      description: Retrieve published news articles with pagination support (public endpoint)
       tags: [Content]
       parameters:
         - name: limit
           in: query
+          description: Maximum number of articles to return (1-100)
+          required: false
           schema:
             type: integer
             minimum: 1
@@ -128,108 +158,190 @@ paths:
             default: 10
         - name: offset
           in: query
+          description: Number of articles to skip for pagination (0-10000)
+          required: false
           schema:
             type: integer
             minimum: 0
+            maximum: 10000
             default: 0
       responses:
-        '200':
-          description: List of news articles
+        "200":
+          description: Paginated list of news articles
           content:
             application/json:
               schema:
                 type: object
+                required: [articles, total]
                 properties:
                   articles:
                     type: array
+                    description: Array of news article objects
+                    maxItems: 100
                     items:
-                      $ref: '#/components/schemas/NewsArticle'
+                      $ref: "#/components/schemas/NewsArticle"
                   total:
                     type: integer
-        '400':
-          $ref: '#/components/responses/BadRequest'
+                    description: Total number of articles available
+                    minimum: 0
+                    maximum: 1000000
+        "400":
+          $ref: "#/components/responses/BadRequest"
 
   /api/forms/contact:
     post:
+      operationId: submitContactForm
       summary: Submit contact form
-      description: Submit a contact form (public endpoint with rate limiting)
+      description: Submit a contact form message (public endpoint with rate limiting)
       tags: [Forms]
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required: [name, email, message]
-              properties:
-                name:
-                  type: string
-                  minLength: 1
-                  maxLength: 100
-                email:
-                  type: string
-                  format: email
-                  maxLength: 255
-                phone:
-                  type: string
-                  maxLength: 20
-                message:
-                  type: string
-                  minLength: 10
-                  maxLength: 5000
+              $ref: "#/components/schemas/ContactFormInput"
       responses:
-        '201':
+        "201":
           description: Form submitted successfully
           content:
             application/json:
               schema:
                 type: object
+                required: [ok, id]
                 properties:
                   ok:
                     type: boolean
+                    description: Success indicator
                   id:
                     type: string
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '429':
-          $ref: '#/components/responses/RateLimited'
+                    description: Unique submission ID
+                    maxLength: 50
+                    pattern: "^[a-zA-Z0-9_-]+$"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "429":
+          $ref: "#/components/responses/RateLimited"
 
 components:
   schemas:
     Event:
       type: object
+      description: Calendar event
       required: [id, title, date]
       properties:
         id:
           type: string
+          description: Unique event identifier
+          maxLength: 50
+          pattern: "^[a-zA-Z0-9_-]+$"
         title:
           type: string
+          description: Event title
+          minLength: 1
+          maxLength: 200
         date:
           type: string
           format: date-time
+          description: Event start date/time in ISO 8601 format
+        end_date:
+          type: string
+          format: date-time
+          description: Event end date/time (for multi-day events)
         location:
           type: string
+          description: Event location
+          maxLength: 200
         description:
           type: string
+          description: Event description
+          maxLength: 5000
+        category:
+          type: string
+          description: Event category
+          maxLength: 50
+          pattern: "^[a-z][a-z0-9_-]*$"
+        published:
+          type: integer
+          description: Publication status (0=draft, 1=published)
+          minimum: 0
+          maximum: 1
         created_at:
           type: integer
+          description: Unix timestamp of creation
+          minimum: 0
+          maximum: 4102444800
 
     NewsArticle:
       type: object
+      description: News article
       required: [id, title, slug]
       properties:
         id:
           type: string
+          description: Unique article identifier
+          maxLength: 50
+          pattern: "^[a-zA-Z0-9_-]+$"
         title:
           type: string
+          description: Article title
+          minLength: 1
+          maxLength: 200
         slug:
           type: string
+          description: URL-friendly article slug
+          minLength: 1
+          maxLength: 200
+          pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
         content:
           type: string
+          description: Article content (markdown)
+          maxLength: 50000
+        excerpt:
+          type: string
+          description: Short summary of the article
+          maxLength: 500
+        author:
+          type: string
+          description: Article author name
+          maxLength: 100
         published_at:
           type: integer
+          description: Unix timestamp of publication
+          minimum: 0
+          maximum: 4102444800
         created_at:
           type: integer
+          description: Unix timestamp of creation
+          minimum: 0
+          maximum: 4102444800
+
+    ContactFormInput:
+      type: object
+      description: Contact form submission data
+      required: [name, email, message]
+      properties:
+        name:
+          type: string
+          description: Sender's full name
+          minLength: 1
+          maxLength: 100
+          pattern: "^[\\p{L}\\p{M}\\s'.,-]+$"
+        email:
+          type: string
+          format: email
+          description: Sender's email address
+          maxLength: 255
+          pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+        phone:
+          type: string
+          description: Sender's phone number (optional)
+          maxLength: 20
+          pattern: "^[\\d\\s()+-]*$"
+        message:
+          type: string
+          description: Message content
+          minLength: 10
+          maxLength: 5000
 
   responses:
     BadRequest:
@@ -238,42 +350,42 @@ components:
         application/json:
           schema:
             type: object
+            required: [error]
             properties:
               error:
                 type: string
+                description: Error message
+                maxLength: 500
               details:
                 type: array
+                description: Detailed validation errors
+                maxItems: 50
                 items:
                   type: object
-
-    Unauthorized:
-      description: Authentication required
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-
-    Forbidden:
-      description: Insufficient permissions
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
+                  properties:
+                    path:
+                      type: string
+                      description: JSON path to the invalid field
+                      maxLength: 100
+                    message:
+                      type: string
+                      description: Validation error message
+                      maxLength: 200
 
     RateLimited:
-      description: Too many requests
+      description: Too many requests - rate limit exceeded
       content:
         application/json:
           schema:
             type: object
+            required: [error]
             properties:
               error:
                 type: string
+                description: Rate limit error message
+                maxLength: 200
               retry_after:
                 type: integer
+                description: Seconds to wait before retrying
+                minimum: 1
+                maximum: 86400

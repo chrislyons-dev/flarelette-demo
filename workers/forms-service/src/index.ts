@@ -53,12 +53,34 @@ const authGuard = (policyObj?: Policy) => {
 
 /**
  * Validation schemas (already validated at gateway, but defense in depth)
+ * These must match the constraints in openapi.yaml and gateway/src/validation.ts
  */
+const patterns = {
+  name: /^[\p{L}\p{M}\s'.,-]+$/u,
+  phone: /^[\d\s()+-]*$/,
+  email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+}
+
 const contactSchema = z.object({
-  name: z.string().min(1).max(100),
-  email: z.string().email().max(255),
-  phone: z.string().max(20).optional(),
-  message: z.string().min(10).max(5000),
+  name: z
+    .string()
+    .min(1, 'Name is required')
+    .max(100, 'Name must be 100 characters or less')
+    .regex(patterns.name, 'Name contains invalid characters'),
+  email: z
+    .string()
+    .email('Invalid email address')
+    .max(255, 'Email must be 255 characters or less')
+    .regex(patterns.email, 'Invalid email format'),
+  phone: z
+    .string()
+    .max(20, 'Phone must be 20 characters or less')
+    .regex(patterns.phone, 'Phone contains invalid characters')
+    .optional(),
+  message: z
+    .string()
+    .min(10, 'Message must be at least 10 characters')
+    .max(5000, 'Message must be 5000 characters or less'),
 })
 
 /**

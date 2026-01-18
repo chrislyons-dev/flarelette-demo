@@ -6,14 +6,16 @@ on:
       environment:
         description: "Environment to deploy to"
         required: true
-        default: "production"
+        default: "preview"
         type: choice
         options:
           - production
-          - staging
+          - preview
   push:
     branches:
-      - main
+      - main # Auto-deploy to preview
+    tags:
+      - "v*" # Deploy to production on version tags (e.g., v1.0.0)
 
 permissions:
   contents: read
@@ -23,7 +25,7 @@ jobs:
   deploy-workers:
     name: Deploy Workers to Cloudflare
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment || 'production' }}
+    environment: ${{ github.event.inputs.environment || (startsWith(github.ref, 'refs/tags/v') && 'production' || 'preview') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,28 +44,40 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Validate JWT_SECRET (must be 64 bytes for HS512)
+      - name: Determine environment
+        id: env
         run: |
-          SECRET_LENGTH=$(echo -n "${{ secrets.JWT_SECRET }}" | base64 -d 2>/dev/null | wc -c)
-          if [ "$SECRET_LENGTH" -lt 64 ]; then
-            echo "❌ JWT_SECRET is only $SECRET_LENGTH bytes. HS512 requires 64 bytes minimum."
-            echo "   Generate a new secret with: node -e \"console.log(require('crypto').randomBytes(64).toString('base64'))\""
-            exit 1
+          if [[ "${{ github.event.inputs.environment }}" != "" ]]; then
+            echo "name=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            echo "name=production" >> $GITHUB_OUTPUT
+          else
+            echo "name=preview" >> $GITHUB_OUTPUT
           fi
-          echo "✅ JWT_SECRET is valid ($SECRET_LENGTH bytes)"
 
-      - name: Deploy Gateway
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: workers/gateway
-          command: deploy
-          secrets: |
-            JWT_SECRET
+      - name: Generate ephemeral JWT secret
+        id: jwt
+        run: |
+          # Generate 64-byte secret for HS512 (128 hex chars)
+          JWT_SECRET=$(openssl rand -hex 64)
+          echo "secret=$JWT_SECRET" >> $GITHUB_OUTPUT
+          echo "::add-mask::$JWT_SECRET"
+          echo "Generated ephemeral JWT_SECRET (${#JWT_SECRET} hex chars = 64 bytes)"
+
+      - name: Set JWT_SECRET for all workers
+        run: |
+          echo "Setting JWT_SECRET for all workers..."
+          cd workers/content-service && echo "$JWT_SECRET" | npx wrangler secret put JWT_SECRET
+          cd ../forms-service && echo "$JWT_SECRET" | npx wrangler secret put JWT_SECRET
+          cd ../image-service && echo "$JWT_SECRET" | npx wrangler secret put JWT_SECRET
+          cd ../gateway && echo "$JWT_SECRET" | npx wrangler secret put JWT_SECRET
+          echo "JWT_SECRET set for all workers"
         env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          JWT_SECRET: ${{ steps.jwt.outputs.secret }}
 
+      # Deploy microservices FIRST (gateway depends on service bindings)
       - name: Deploy Content Service
         uses: cloudflare/wrangler-action@v3
         with:
@@ -71,10 +85,6 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: workers/content-service
           command: deploy
-          secrets: |
-            JWT_SECRET
-        env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       - name: Deploy Forms Service
         uses: cloudflare/wrangler-action@v3
@@ -83,10 +93,6 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: workers/forms-service
           command: deploy
-          secrets: |
-            JWT_SECRET
-        env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       - name: Deploy Image Service
         uses: cloudflare/wrangler-action@v3
@@ -95,15 +101,28 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: workers/image-service
           command: deploy
-          secrets: |
-            JWT_SECRET
+
+      # Deploy Gateway LAST (depends on all microservices)
+      - name: Deploy Gateway
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: workers/gateway
+          command: deploy
+
+      - name: Configure API Shield (optional)
+        if: ${{ secrets.CLOUDFLARE_ZONE_ID != '' }}
+        run: node scripts/configure-api-shield.js
+        continue-on-error: true
         env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
 
   deploy-ui:
     name: Deploy UI to Cloudflare Pages
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment || 'production' }}
+    environment: ${{ github.event.inputs.environment || (startsWith(github.ref, 'refs/tags/v') && 'production' || 'preview') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -122,12 +141,76 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Determine environment
+        id: env
+        run: |
+          if [[ "${{ github.event.inputs.environment }}" != "" ]]; then
+            echo "name=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            echo "name=production" >> $GITHUB_OUTPUT
+          else
+            echo "name=preview" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build UI
         run: pnpm --filter ui build
+        env:
+          # Set your production/preview URLs here
+          PUBLIC_API_BASE_URL: ${{ steps.env.outputs.name == 'production' && vars.PRODUCTION_API_URL || vars.PREVIEW_API_URL || '' }}
+
+      - name: Verify build output
+        run: ls -la ui/dist
+
+      - name: Ensure Pages project exists
+        run: |
+          node - <<'NODE'
+          (async () => {
+            const name = 'flarelette-demo-ui'
+            const accountId = process.env.CLOUDFLARE_ACCOUNT_ID
+            const token = process.env.CLOUDFLARE_API_TOKEN
+            if (!accountId || !token) {
+              throw new Error('Missing CLOUDFLARE_ACCOUNT_ID or CLOUDFLARE_API_TOKEN')
+            }
+            const baseUrl = `https://api.cloudflare.com/client/v4/accounts/${accountId}/pages/projects`
+            const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
+
+            // Check if project exists
+            const listRes = await fetch(baseUrl, { headers })
+            const listData = await listRes.json()
+            if (!listRes.ok || !listData.success) {
+              const message = listData?.errors?.map((e) => e.message).join(', ') || listRes.statusText
+              throw new Error(`Cloudflare API error (list projects): ${message}`)
+            }
+            const exists = Array.isArray(listData.result) && listData.result.some((p) => p.name === name)
+            if (exists) {
+              console.log(`Pages project already exists: ${name}`)
+              return
+            }
+
+            // Create project
+            console.log(`Creating Pages project: ${name}`)
+            const createRes = await fetch(baseUrl, {
+              method: 'POST',
+              headers,
+              body: JSON.stringify({ name, production_branch: 'main' }),
+            })
+            const createData = await createRes.json()
+            if (!createRes.ok || !createData.success) {
+              const message = createData?.errors?.map((e) => e.message).join(', ') || createRes.statusText
+              throw new Error(`Cloudflare API error (create project): ${message}`)
+            }
+            console.log(`Pages project created: ${name}`)
+          })().catch((error) => {
+            console.error(error.message)
+            process.exit(1)
+          })
+          NODE
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ui/dist --project-name=flarelette-demo-ui
+        run: npx wrangler pages deploy ui/dist --project-name=flarelette-demo-ui --branch=${{ steps.env.outputs.name }} --commit-dirty=true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
