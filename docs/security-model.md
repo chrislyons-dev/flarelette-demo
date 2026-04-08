@@ -9,7 +9,7 @@
 - **Algorithm:** EdDSA (Ed25519).
 - **Boundary:** Gateway **signs** short-lived internal JWTs; microservices **verify** them.
 - **Key Distribution:** Gateway exposes **JWKS** (JSON Web Key Set) and microservices fetch public keys via a **private Service Binding** (not over the public Internet).
-- **Everything behind `/api` verifies internal JWTs** (even “public” routes).
+- **Everything behind `/api` verifies internal JWTs** (even "public" routes).
 - **Ephemeral secrets:** Ed25519 keypair is **generated at deploy time in GitHub Actions** and **pushed** to Workers. No keys are committed to the repo.
 
 ---
@@ -27,7 +27,7 @@
 - Use **flarelette-hono** for request handling/auth guard.
 - Add a **Service Binding to the Gateway** and fetch JWKS at startup (and periodically refresh).
 - Verify `iss`, `aud`, `exp`, signature for **every** inbound request.
-- “Public” paths still require a **valid internal JWT** from the Gateway.
+- "Public" paths still require a **valid internal JWT** from the Gateway.
 
 ---
 

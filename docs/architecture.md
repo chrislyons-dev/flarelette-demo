@@ -69,7 +69,7 @@ flarelette.chrislyons.dev/api/*
 ## 🔒 Security Model
 
 - **Every request is signed.**
-  Even “public” endpoints require a valid internal JWT minted by the Gateway.
+  Even "public" endpoints require a valid internal JWT minted by the Gateway.
 
 - **No shared secrets.**
   Services verify JWTs via the Gateway’s **JWKS**, fetched securely through a Service Binding.

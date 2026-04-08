@@ -2,7 +2,7 @@
 
 ## Goals
 
-- Every microservice endpoint requires an **internal JWT** (even “public” ones get an **anonymous** internal token).
+- Every microservice endpoint requires an **internal JWT** (even "public" ones get an **anonymous** internal token).
 - Gateway performs **RFC 8693 OAuth 2.0 Token Exchange** when the caller is authenticated (Auth0 or similar), then mints a short-lived, least-privilege **internal token**.
 - Microservices **never** see user tokens; they only trust gateway-issued internal JWTs.
 
@@ -10,7 +10,7 @@
 
 ## Flows
 
-### A) Anonymous request → internal “anon” token
+### A) Anonymous request → internal "anon" token
 
 ```
 Client ──(no auth)──▶ Gateway
@@ -22,13 +22,13 @@ Gateway ──(Authorization: Bearer <internal>)──▶ Service
 Service verifies (JWKS/HS), applies policy, returns data
 ```
 
-### B) Authenticated request → RFC 8693 token exchange → internal “subject” token
+### B) Authenticated request → RFC 8693 token exchange → internal "subject" token
 
 ```
 Client ──(Authorization: Bearer <user access token>)──▶ Gateway
 Gateway:
   • Validate external token (issuer=Auth0, etc.)
-  • Perform “token exchange” semantics (RFC 8693)
+  • Perform "token exchange" semantics (RFC 8693)
   • Mint internal token with derived claims/permissions
 Gateway ──(Authorization: Bearer <internal>)──▶ Service
 Service verifies internal only, applies policy, returns data
@@ -77,7 +77,7 @@ Recommended **minimal** claims (keep small; no PII):
 
 3. **Mint internal**
    - Use `@chrislyons-dev/flarelette-jwt` to `createToken(payload)` (EdDSA preferred).
-   - Set `aud` to **service** or **mesh** (see “Audience strategy” below).
+   - Set `aud` to **service** or **mesh** (see "Audience strategy" below).
    - Include `kid` in header for rotation.
 
 4. **Forward internal**
